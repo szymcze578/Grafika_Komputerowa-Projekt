@@ -6,6 +6,8 @@ public class PlayerMovement : MonoBehaviour
 {
 
     private CharacterController m_charCont;
+    private Animator anim;
+
     float m_horizontal;
     float m_vertical;
 
@@ -15,6 +17,7 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         m_charCont = GetComponent<CharacterController>();
+        anim = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -22,6 +25,8 @@ public class PlayerMovement : MonoBehaviour
     {
         m_horizontal = Input.GetAxis("Horizontal");
         m_vertical = Input.GetAxis("Vertical");
+
+        anim.SetFloat("vertical", m_vertical);
 
         Vector3 m_playerMovement = new Vector3(m_horizontal, 0f, m_vertical) * PlayerSpeed;
 
