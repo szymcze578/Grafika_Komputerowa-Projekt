@@ -11,18 +11,37 @@ public class PlayerMovement : MonoBehaviour
     float m_horizontal;
     float m_vertical;
 
-    public float PlayerSpeed = 0.3f;
+    public float PlayerSpeed = 0.03f;
+    public float rotationSpeed = 1000f;
 
     // Start is called before the first frame update
     void Start()
     {
         m_charCont = GetComponent<CharacterController>();
         anim = GetComponent<Animator>();
+
     }
 
     // Update is called once per frame
     void Update()
     {
+        Vector3 mousePosition = Input.mousePosition;
+
+        Ray ray = Camera.main.ScreenPointToRay(mousePosition);
+        Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
+
+        if (groundPlane.Raycast(ray, out float distance))
+        {
+            Vector3 targetPosition = ray.GetPoint(distance);
+            Vector3 direction = targetPosition - transform.position;
+
+            direction.y = 0f;
+
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        }
+
+
         m_horizontal = Input.GetAxis("Horizontal");
         m_vertical = Input.GetAxis("Vertical");
 

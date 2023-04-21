@@ -8,12 +8,13 @@ public class CameraFollow : MonoBehaviour
     public Transform Player;
 
     float camOffsetZ;
-
-
+    
     // Start is called before the first frame update
     void Start()
     {
+
         camOffsetZ = gameObject.transform.position.z - Player.position.z;
+  
     }
 
     // Update is called once per frame
