@@ -8,17 +8,35 @@ public class EnemyMovement : MonoBehaviour
 {
     public Transform Target;
     public float UpdateSpeed = 0.1f;
+    [SerializeField]
+    private Animator Animator;
 
     private NavMeshAgent Agent;
+
+    private const string isMoving = "isMoving";
+
+    private Coroutine FollowCoroutine;
 
     private void Awake()
     {
         Agent = GetComponent<NavMeshAgent>();
     }
 
-    private void Start()
+    private void Update()
     {
-        StartCoroutine(FollowTarget());
+        Animator.SetBool(isMoving, Agent.velocity.magnitude > 0.01f);
+    }
+
+    public void StartChasing()
+    {
+        if (FollowCoroutine == null)
+        {
+            FollowCoroutine = StartCoroutine(FollowTarget());
+        }
+        else
+        {
+            Debug.LogWarning("Wywolano metode StartChasing na przeciwniku ktory juz sciga gracza!");
+        }
     }
 
     private IEnumerator FollowTarget()

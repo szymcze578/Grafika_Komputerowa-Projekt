@@ -1,14 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Bullet : MonoBehaviour
 {
 
     public float life = 3;
+    public WeaponSystem gunHolder = null;
 
     private void Awake()
     {
+        gunHolder = GameObject.Find("GunHolder").GetComponent<WeaponSystem>();
         Destroy(gameObject, life);
     }
 
@@ -16,7 +19,8 @@ public class Bullet : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            Destroy(collision.gameObject);
+            gunHolder.playerPoints += 10;
+            Destroy(collision.gameObject);   
         }
 
         Destroy(gameObject);
