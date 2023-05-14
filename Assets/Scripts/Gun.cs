@@ -5,8 +5,7 @@ using UnityEngine;
 public class Gun : MonoBehaviour
 {
 
-
-    public Transform bulletSpawnPoint;
+    public Transform bulletSpawnPoint = null;
     public GameObject bulletPrefab;
     public float bulletSpeed = 10;
 
@@ -15,8 +14,7 @@ public class Gun : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
-
+        bulletSpawnPoint = transform.GetChild(1);
     }
 
     // Update is called once per frame

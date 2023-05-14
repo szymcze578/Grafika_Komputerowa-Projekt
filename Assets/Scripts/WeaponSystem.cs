@@ -7,11 +7,16 @@ public class WeaponSystem : MonoBehaviour
     public GameObject bulletPrefab;
     public float bulletSpeed = 10;
 
+    private Animator anim;
+
     // Start is called before the first frame update
     void Start()
     {
+        anim = transform.root.GetComponent<Animator>();
+
         SelectWeapon(1);
         bulletSpawnPoint = transform.GetChild(selectedWeapon-1);
+        
     }
 
     // Update is called once per frame
@@ -34,9 +39,11 @@ public class WeaponSystem : MonoBehaviour
 
     void SelectWeapon(int weaponIndex)
     {
+        Debug.Log(weaponIndex);
         transform.GetChild(selectedWeapon-1).gameObject.SetActive(false);
         transform.GetChild(weaponIndex-1).gameObject.SetActive(true);
         selectedWeapon = weaponIndex;
+        anim.SetInteger("weapon", weaponIndex);
         bulletSpawnPoint = transform.GetChild(selectedWeapon-1);
     }
 }
