@@ -76,7 +76,7 @@ public class WeaponSystem : MonoBehaviour
     {
         reloading = true;
         anim.SetTrigger("reload");
-        Invoke("ReloadFinished", reloadTime);
+        Invoke("ReloadFinished", 3.0f/reloadTime);
     }
 
     private void Shoot()
@@ -130,7 +130,7 @@ public class WeaponSystem : MonoBehaviour
 
                 timeBetweenShoting = 0.2f;
                 timeBetweenShots = 0.1f;
-                reloadTime = 1f;
+                reloadTime = 2f; // 3s / 2 = 1.5s
                 break;
 
             case 2:
@@ -145,7 +145,7 @@ public class WeaponSystem : MonoBehaviour
 
                 timeBetweenShoting = 0.1f;
                 timeBetweenShots = 0.1f;
-                reloadTime = 2f;
+                reloadTime = 1f; // 3s / 1
                 break;
 
             case 3:
@@ -159,9 +159,9 @@ public class WeaponSystem : MonoBehaviour
                 bulletsLeft = 15;
 
                 timeBetweenShoting = 1f;
-                reloadTime = 3f;
+                reloadTime = 0.7f; // 3s / 0.7
                 break;
         }
-            
+           anim.SetFloat("reloadTime", reloadTime); 
     }
 }
