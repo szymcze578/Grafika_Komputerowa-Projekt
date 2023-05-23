@@ -12,7 +12,8 @@ public class WeaponSystem : MonoBehaviour
     public Text pointsDisplay;
 
     public int selectedWeapon = 1; // 1 - pistol, 2 - assault, 3 - shotgun
-    
+    public bool[] weaponLock = { true, false, false };
+
     public float bulletSpeed = 10;
 
     private Animator anim;
@@ -43,17 +44,17 @@ public class WeaponSystem : MonoBehaviour
     {
         MyInput();
         ammoDisplay.text = bulletsLeft + "/" + magazineSize;
-        pointsDisplay.text = playerPoints.ToString();
+        pointsDisplay.text = "Punkty: " + playerPoints.ToString();
         
     }
 
     private void MyInput()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        if (Input.GetKeyDown(KeyCode.Alpha1)) 
             SelectWeapon(1);
-        if (Input.GetKeyDown(KeyCode.Alpha2))
+        if (Input.GetKeyDown(KeyCode.Alpha2) && weaponLock[1])
             SelectWeapon(2);
-        if (Input.GetKeyDown(KeyCode.Alpha3))
+        if (Input.GetKeyDown(KeyCode.Alpha3) && weaponLock[2])
             SelectWeapon(3);
 
         if (allowButtonHold)
