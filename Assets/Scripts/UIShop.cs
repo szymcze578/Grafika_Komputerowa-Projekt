@@ -55,6 +55,7 @@ public class UIShop : MonoBehaviour
 		}
 		else
         {
+			shopActive = false;
 			hudAlerts.text = "";
 			canvas.SetActive(false);
 			weaponSystem.blockShooting = true;
