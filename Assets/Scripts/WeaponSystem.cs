@@ -23,6 +23,7 @@ public class WeaponSystem : MonoBehaviour
 
     int bulletsLeft, bulletsShot;
     bool shooting, reloading, readyToShoot;
+    public bool blockShooting = false;
 
     public int playerPoints = 0;
 
@@ -65,7 +66,7 @@ public class WeaponSystem : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R) && bulletsLeft < magazineSize && !reloading)
             Reload();
 
-        if (readyToShoot && shooting && !reloading && bulletsLeft > 0)
+        if (blockShooting && readyToShoot && shooting && !reloading && bulletsLeft > 0)
         {
             bulletsShot = bulletsPerTab;
             Shoot();
