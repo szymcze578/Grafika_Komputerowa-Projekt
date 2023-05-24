@@ -8,6 +8,7 @@ public class UIShop : MonoBehaviour
 
 	public GameObject shop;
 	public Text shopAlerts;
+	public Text hudAlerts;
 
 	public GameObject player;
 
@@ -16,6 +17,7 @@ public class UIShop : MonoBehaviour
 	public GameObject shotgunButton;
 
 	public bool wave = false;
+	bool shopActive;
 
 	void Start()
 	{
@@ -32,11 +34,28 @@ public class UIShop : MonoBehaviour
 		float distance = Vector3.Distance(player.transform.position, shop.transform.position);
 		if (wave == false && distance < 2.0f)
         {
-			canvas.SetActive(true);
-			weaponSystem.blockShooting = false;
+			if (!shopActive)
+				hudAlerts.text = "Press E to enter the shop";
+
+			if (Input.GetKeyDown(KeyCode.E))
+            {
+				shopActive = true;
+				hudAlerts.text = "";
+				canvas.SetActive(true);
+				weaponSystem.blockShooting = false;
+			}
+
+			if (canvas.activeSelf && Input.GetKeyDown(KeyCode.Escape))
+			{
+				shopActive = false;
+				canvas.SetActive(false);
+				weaponSystem.blockShooting = true;
+			}
+
 		}
 		else
         {
+			hudAlerts.text = "";
 			canvas.SetActive(false);
 			weaponSystem.blockShooting = true;
 		}
