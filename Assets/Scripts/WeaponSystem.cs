@@ -51,11 +51,11 @@ public class WeaponSystem : MonoBehaviour
 
     private void MyInput()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1)) 
+        if (Input.GetKeyDown(KeyCode.Alpha1) && selectedWeapon != 1) 
             SelectWeapon(1);
-        if (Input.GetKeyDown(KeyCode.Alpha2) && weaponLock[1])
+        if (Input.GetKeyDown(KeyCode.Alpha2) && weaponLock[1] && selectedWeapon != 2)
             SelectWeapon(2);
-        if (Input.GetKeyDown(KeyCode.Alpha3) && weaponLock[2])
+        if (Input.GetKeyDown(KeyCode.Alpha3) && weaponLock[2] && selectedWeapon != 3)
             SelectWeapon(3);
 
         if (allowButtonHold)
