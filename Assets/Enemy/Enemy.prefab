@@ -101,6 +101,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Movement: {fileID: 8334811645389491846}
   Agent: {fileID: 8334811645389491841}
+  EnemyScriptableObject: {fileID: 11400000, guid: 5dad77873a58e084eaa69f51b5e207f7, type: 2}
   Health: 100
 --- !u!1001 &8334811645948708182
 PrefabInstance:

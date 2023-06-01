@@ -880,6 +880,7 @@ MonoBehaviour:
   weaponSystem: {fileID: 1093486954}
   shop: {fileID: 324256291}
   shopAlerts: {fileID: 739265012}
+  hudAlerts: {fileID: 0}
   player: {fileID: 409952834}
   canvas: {fileID: 973713865}
   assaultButton: {fileID: 1931714500}
@@ -1251,6 +1252,36 @@ MonoBehaviour:
   m_VoxelSize: 0.083333336
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 23800000, guid: 0f48e62a720e8524a880899f76688dec, type: 2}
+  m_BuildHeightMesh: 0
+--- !u!114 &645221834
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 645221830}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AgentTypeID: -1372625422
+  m_CollectObjects: 2
+  m_Size: {x: 10, y: 10, z: 10}
+  m_Center: {x: 0, y: 2, z: 0}
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_UseGeometry: 0
+  m_DefaultArea: 0
+  m_IgnoreNavMeshAgent: 1
+  m_IgnoreNavMeshObstacle: 1
+  m_OverrideTileSize: 0
+  m_TileSize: 256
+  m_OverrideVoxelSize: 0
+  m_VoxelSize: 0.11000001
+  m_MinRegionArea: 2
+  m_NavMeshData: {fileID: 23800000, guid: 7649ad08113928840a9d07dca83007da, type: 2}
   m_BuildHeightMesh: 0
 --- !u!1 &705507993
 GameObject:
@@ -2130,6 +2161,7 @@ MonoBehaviour:
   SpawnDelay: 1
   EnemyPrefabs:
   - {fileID: 5215353196608470287, guid: cfacfac178603d94abb517a012b46c01, type: 3}
+  - {fileID: 1369939204413911480, guid: 1a53f00fc4a4ff04d96ac3ffac52ee0c, type: 3}
   EnemySpawnMethod: 0
 --- !u!4 &884256711
 Transform:
