@@ -7,9 +7,11 @@ public class PlayerMovement : MonoBehaviour
 
     private CharacterController m_charCont;
     private Animator anim;
+    private Vector3 m_playerMovement = Vector3.zero;
 
     float m_horizontal;
     float m_vertical;
+    private float gravity = 0.5f;
 
     public float PlayerSpeed = 0.03f;
     public float rotationSpeed = 1000f;
@@ -25,33 +27,39 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector3 mousePosition = Input.mousePosition;
+        
+            Vector3 mousePosition = Input.mousePosition;
 
-        Ray ray = Camera.main.ScreenPointToRay(mousePosition);
-        Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
+            Ray ray = Camera.main.ScreenPointToRay(mousePosition);
+            Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
 
-        if (groundPlane.Raycast(ray, out float distance))
+
+            if (groundPlane.Raycast(ray, out float distance))
+            {
+                Vector3 targetPosition = ray.GetPoint(distance);
+                Vector3 direction = targetPosition - transform.position;
+
+                UpdateAnimator(direction, anim);
+
+                direction.y = 0f;
+
+                Quaternion targetRotation = Quaternion.LookRotation(direction);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            }
+
+
+            m_horizontal = Input.GetAxis("Horizontal");
+            m_vertical = Input.GetAxis("Vertical");
+
+            //anim.SetFloat("vertical", m_vertical);
+            //anim.SetFloat("horizontal", m_horizontal);
+
+            m_playerMovement = new Vector3(m_horizontal, 0f, m_vertical) * PlayerSpeed;
+        if (!m_charCont.isGrounded)
         {
-            Vector3 targetPosition = ray.GetPoint(distance);
-            Vector3 direction = targetPosition - transform.position;
-
-            UpdateAnimator(direction, anim);
-
-            direction.y = 0f;
-
-            Quaternion targetRotation = Quaternion.LookRotation(direction);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            m_playerMovement.y -= gravity;
         }
-
-
-        m_horizontal = Input.GetAxis("Horizontal");
-        m_vertical = Input.GetAxis("Vertical");
-
-        //anim.SetFloat("vertical", m_vertical);
-        //anim.SetFloat("horizontal", m_horizontal);
-
-        Vector3 m_playerMovement = new Vector3(m_horizontal, 0f, m_vertical) * PlayerSpeed;
-
+        
         m_charCont.Move(m_playerMovement);
     }
 
@@ -59,6 +67,7 @@ public class PlayerMovement : MonoBehaviour
     {
         float verticalMagnitude = 0;
         float horizontalMagnitude = 0;
+
 
         Vector3 axisVector = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
         
