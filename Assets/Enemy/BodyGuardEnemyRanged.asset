@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aac7a123923d4e3418acbc774d2cbbac, type: 3}
-  m_Name: Enemy
+  m_Name: BodyGuardEnemyRanged
   m_EditorClassIdentifier: 
-  Health: 100
-  AttackDelay: 1
-  Damage: 5
-  AttackRadius: 1.5
-  IsRanged: 0
+  Health: 50
+  AttackDelay: 0.25
+  Damage: 3
+  AttackRadius: 7
+  IsRanged: 1
   AIUpdateInterval: 0.1
   Acceleration: 8
   AngularSpeed: 120
@@ -26,5 +26,5 @@ MonoBehaviour:
   Height: 2
   ObstacleAvoidanceType: 1
   Radius: 0.5
-  Speed: 4
+  Speed: 2
   StoppingDistance: 0.5

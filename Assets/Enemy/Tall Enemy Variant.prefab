@@ -15,9 +15,13 @@ PrefabInstance:
       propertyPath: m_Height
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 8334811645389491841, guid: cfacfac178603d94abb517a012b46c01, type: 3}
+      propertyPath: m_AgentTypeID
+      value: -1372625422
+      objectReference: {fileID: 0}
     - target: {fileID: 8334811645389491847, guid: cfacfac178603d94abb517a012b46c01, type: 3}
       propertyPath: m_Name
-      value: Tall Enemy
+      value: Tall Enemy Variant
       objectReference: {fileID: 0}
     - target: {fileID: 8334811645389491853, guid: cfacfac178603d94abb517a012b46c01, type: 3}
       propertyPath: m_RootOrder
