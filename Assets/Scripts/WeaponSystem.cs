@@ -2,6 +2,8 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
+using System.Linq;
 
 public class WeaponSystem : MonoBehaviour
 {
@@ -9,7 +11,9 @@ public class WeaponSystem : MonoBehaviour
     public GameObject bulletPrefab;
 
     public Text ammoDisplay;
+    public Text ammoAnimation;
     public Text pointsDisplay;
+    public Text hudInfo;
 
     public int selectedWeapon = 1; // 1 - pistol, 2 - assault, 3 - shotgun
     public bool[] weaponLock = { true, false, false };
@@ -45,7 +49,10 @@ public class WeaponSystem : MonoBehaviour
     {
         MyInput();
         ammoDisplay.text = bulletsLeft + "/" + magazineSize;
-        pointsDisplay.text = "Punkty: " + playerPoints.ToString();
+        ammoAnimation.text = string.Concat(Enumerable.Repeat("I", bulletsLeft));
+        pointsDisplay.text = "Points: " + playerPoints.ToString();
+        if (bulletsLeft < 0.5*magazineSize)
+            hudInfo.text = "Press R to reload";
         
     }
 
@@ -109,7 +116,6 @@ public class WeaponSystem : MonoBehaviour
 
     void SelectWeapon(int weaponIndex)
     {
-        Debug.Log(weaponIndex);
         transform.GetChild(selectedWeapon-1).gameObject.SetActive(false);
         transform.GetChild(weaponIndex-1).gameObject.SetActive(true);
         selectedWeapon = weaponIndex;
