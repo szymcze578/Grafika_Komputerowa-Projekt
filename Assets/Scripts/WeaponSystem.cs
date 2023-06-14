@@ -35,13 +35,7 @@ public class WeaponSystem : MonoBehaviour
     void Start()
     {
         anim = transform.root.GetComponent<Animator>();
-
-        SelectWeapon(1);
-
-        bulletSpawnPoint.transform.position = transform.GetChild(selectedWeapon-1).position;
-        bulletSpawnPoint.transform.Translate(0.0f, 0.0f, -0.3f);
-        bulletSpawnPoint.transform.rotation = transform.GetChild(selectedWeapon-1).rotation;
-        
+        SelectWeapon(1);     
     }
 
     // Update is called once per frame
@@ -121,12 +115,13 @@ public class WeaponSystem : MonoBehaviour
         selectedWeapon = weaponIndex;
         anim.SetInteger("weapon", weaponIndex);
         bulletSpawnPoint.transform.position = transform.GetChild(selectedWeapon-1).position;
-        bulletSpawnPoint.transform.Translate(0.0f, 0.0f, 0.3f);
+        bulletSpawnPoint.transform.rotation = transform.GetChild(selectedWeapon-1).rotation;
 
         //Change weapon stats
         switch(weaponIndex)
         {
             case 1:
+                bulletSpawnPoint.transform.Translate(0.0f, 0.08f, 0.2f);
                 readyToShoot = true;
                 allowButtonHold = false;
                 shooting = false;
@@ -142,6 +137,7 @@ public class WeaponSystem : MonoBehaviour
                 break;
 
             case 2:
+                bulletSpawnPoint.transform.Translate(0.0f, 0.13f, 0.7f);
                 readyToShoot = true;
                 allowButtonHold = true;
                 shooting = false;
@@ -157,6 +153,7 @@ public class WeaponSystem : MonoBehaviour
                 break;
 
             case 3:
+                bulletSpawnPoint.transform.Translate(0.0f, 0.13f, 0.6f);
                 readyToShoot = true;
                 allowButtonHold = false;
                 shooting = false;
