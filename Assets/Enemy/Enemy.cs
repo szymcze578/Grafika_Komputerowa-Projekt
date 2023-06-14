@@ -79,6 +79,13 @@ public class Enemy : PoolableObject, IDamageable
         AttackRadius.Collider.radius = EnemyScriptableObject.AttackRadius;
         AttackRadius.AttackDelay = EnemyScriptableObject.AttackDelay;
         AttackRadius.Damage = EnemyScriptableObject.Damage;
+
+        if(EnemyScriptableObject.IsRanged) {
+            Animator.SetBool("hasPistol", true);
+        }
+        else {
+            Animator.SetBool("hasPistol", false);
+        }
     }
 
     public void TakeDamage(int Damage)
