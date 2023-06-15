@@ -17,6 +17,9 @@ public class WeaponSystem : MonoBehaviour
     private ParticleSystem ImpactParticleSystem;
 
     [SerializeField]
+    private ParticleSystem FleshImpactParticleSystem;
+
+    [SerializeField]
     private TrailRenderer BulletTrail;
 
     [SerializeField]
@@ -44,6 +47,7 @@ public class WeaponSystem : MonoBehaviour
     public bool blockShooting = false;
 
     public int playerPoints = 0;
+
 
     // Start is called before the first frame update
     void Start()
@@ -108,10 +112,6 @@ public class WeaponSystem : MonoBehaviour
 
             StartCoroutine(SpawnTrail(trail, hit));
 
-            if(hit.collider.CompareTag("Enemy")) {
-                var enemy = hit.collider.GetComponent<Enemy>();
-                enemy.TakeDamage(50); // nie dziala
-            }
         }
 
         bulletsLeft--;
@@ -133,7 +133,18 @@ public class WeaponSystem : MonoBehaviour
             yield return null;
         }
         Trail.transform.position = Hit.point;
-        Instantiate(ImpactParticleSystem, Hit.point, Quaternion.LookRotation(Hit.normal));
+        if(Hit.collider.CompareTag("Enemy")) {
+                //Instantiate(FleshImpactParticleSystem, Hit.point, Quaternion.LookRotation(Hit.normal));
+                var enemy = Hit.rigidbody.GetComponent<Enemy>();
+                enemy.TakeDamage(50);
+                if(enemy.Health <= 0) {
+                    playerPoints += 10;
+                }
+            }
+        else {
+            Instantiate(ImpactParticleSystem, Hit.point, Quaternion.LookRotation(Hit.normal));
+        }
+        
         Destroy(Trail.gameObject, Trail.time);
     }
 

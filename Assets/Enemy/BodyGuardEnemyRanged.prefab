@@ -183,7 +183,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Collider: {fileID: 1198522780067136831}
   Damage: 10
-  AttackDelay: 0.5
+  AttackDelay: 6
   Agent: {fileID: 2033343458048491083}
   BulletPrefab: {fileID: 1498379059122610747, guid: 68cb1e5c70ba7794294590c8dddada35, type: 3}
   BulletSpawnOffset: {x: 0, y: 1, z: 0}
@@ -191,6 +191,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 65
   SpherecastRadius: 0.1
+  bulletSpawnPoint: {fileID: 0}
+  BulletTrail: {fileID: 328621789431213768, guid: 43559d27d223bf340b413fde1315c256, type: 3}
+  ImpactParticleSystem: {fileID: 9064919875212695174, guid: a5e1e2c4d2cd81f4abed6272a2b8187a, type: 3}
+  FleshImpactParticleSystem: {fileID: 702519097773429891, guid: 4223300402336a943a87f36c11209006, type: 3}
 --- !u!1 &5226460267113973893
 GameObject:
   m_ObjectHideFlags: 0
