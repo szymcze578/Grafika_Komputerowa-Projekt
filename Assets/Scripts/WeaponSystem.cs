@@ -7,8 +7,22 @@ using System.Linq;
 
 public class WeaponSystem : MonoBehaviour
 {
-    public GameObject bulletSpawnPoint = null;
-    public GameObject bulletPrefab;
+    [SerializeField]
+    private GameObject bulletSpawnPoint = null;
+    //public GameObject bulletPrefab;
+    [SerializeField]
+    private ParticleSystem ShootingSystem;
+
+    [SerializeField]
+    private ParticleSystem ImpactParticleSystem;
+
+    [SerializeField]
+    private TrailRenderer BulletTrail;
+
+    [SerializeField]
+    private LayerMask Mask;
+
+
 
     public Text ammoDisplay;
     public Text ammoAnimation;
@@ -86,8 +100,19 @@ public class WeaponSystem : MonoBehaviour
     {
         readyToShoot = false;
 
-        var bullet = Instantiate(bulletPrefab, bulletSpawnPoint.transform.position, bulletSpawnPoint.transform.rotation);
-        bullet.GetComponent<Rigidbody>().velocity = bulletSpawnPoint.transform.forward * bulletSpeed;
+        //var bullet = Instantiate(bulletPrefab, bulletSpawnPoint.transform.position, bulletSpawnPoint.transform.rotation);
+        //bullet.GetComponent<Rigidbody>().velocity = bulletSpawnPoint.transform.forward * bulletSpeed;
+
+        if(Physics.Raycast(bulletSpawnPoint.transform.position, bulletSpawnPoint.transform.forward, out RaycastHit hit, float.MaxValue, Mask)) {
+            TrailRenderer trail = Instantiate(BulletTrail, bulletSpawnPoint.transform.position, Quaternion.identity);
+
+            StartCoroutine(SpawnTrail(trail, hit));
+
+            if(hit.collider.CompareTag("Enemy")) {
+                var enemy = hit.collider.GetComponent<Enemy>();
+                enemy.TakeDamage(50); // nie dziala
+            }
+        }
 
         bulletsLeft--;
         bulletsShot--;
@@ -95,6 +120,21 @@ public class WeaponSystem : MonoBehaviour
 
         if (bulletsShot > 0 && bulletsLeft > 0)
             Invoke("Shoot", timeBetweenShots);
+    }
+
+    private IEnumerator SpawnTrail(TrailRenderer Trail, RaycastHit Hit)
+    {
+        float time = 0;
+        Vector3 startPosition = Trail.transform.position;
+
+        while(time < 1) {
+            Trail.transform.position = Vector3.Lerp(startPosition, Hit.point, time);
+            time += Time.deltaTime / Trail.time;
+            yield return null;
+        }
+        Trail.transform.position = Hit.point;
+        Instantiate(ImpactParticleSystem, Hit.point, Quaternion.LookRotation(Hit.normal));
+        Destroy(Trail.gameObject, Trail.time);
     }
 
     private void ResetShot()

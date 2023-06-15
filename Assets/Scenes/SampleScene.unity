@@ -6945,7 +6945,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletSpawnPoint: {fileID: 552198296}
-  bulletPrefab: {fileID: 2550724304862711066, guid: 0a2516d84cb655d49863e80e9867fd34, type: 3}
+  ShootingSystem: {fileID: 198234346748616026, guid: ad2ab49d0a2a17148bd51c93d977bdbc, type: 3}
+  ImpactParticleSystem: {fileID: 9064919875212695174, guid: a5e1e2c4d2cd81f4abed6272a2b8187a, type: 3}
+  BulletTrail: {fileID: 328621789431213768, guid: 43559d27d223bf340b413fde1315c256, type: 3}
+  Mask:
+    serializedVersion: 2
+    m_Bits: 1
   ammoDisplay: {fileID: 1325178039}
   ammoAnimation: {fileID: 1336066886}
   pointsDisplay: {fileID: 567583197}
