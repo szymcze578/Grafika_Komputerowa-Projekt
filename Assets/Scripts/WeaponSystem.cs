@@ -42,7 +42,7 @@ public class WeaponSystem : MonoBehaviour
     public int magazineSize, bulletsPerTab;
     public bool allowButtonHold;
 
-    int bulletsLeft, bulletsShot;
+    int bulletsLeft, bulletsShot, damage;
     bool shooting, reloading, readyToShoot;
     public bool blockShooting = false;
 
@@ -62,10 +62,10 @@ public class WeaponSystem : MonoBehaviour
         MyInput();
         ammoDisplay.text = bulletsLeft + "/" + magazineSize;
         ammoAnimation.text = string.Concat(Enumerable.Repeat("I", bulletsLeft));
-        pointsDisplay.text = "Points: " + playerPoints.ToString();
+        pointsDisplay.text = playerPoints.ToString() + " $";
         if (bulletsLeft < 0.5*magazineSize)
             hudInfo.text = "Press R to reload";
-        
+
     }
 
     private void MyInput()
@@ -181,6 +181,7 @@ public class WeaponSystem : MonoBehaviour
                 bulletsPerTab = 1;
                 magazineSize = 10;
                 bulletsLeft = 10;
+                damage = 20;
 
                 timeBetweenShoting = 0.2f;
                 timeBetweenShots = 0.1f;
@@ -197,6 +198,7 @@ public class WeaponSystem : MonoBehaviour
                 bulletsPerTab = 3;
                 magazineSize = 30;
                 bulletsLeft = 30;
+                damage = 30;
 
                 timeBetweenShoting = 0.1f;
                 timeBetweenShots = 0.1f;
@@ -209,6 +211,7 @@ public class WeaponSystem : MonoBehaviour
                 allowButtonHold = false;
                 shooting = false;
                 reloading = false;
+                damage = 50;
 
                 bulletsPerTab = 1;
                 magazineSize = 15;
