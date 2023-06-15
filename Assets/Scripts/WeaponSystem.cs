@@ -136,7 +136,7 @@ public class WeaponSystem : MonoBehaviour
         if(Hit.collider.CompareTag("Enemy")) {
                 //Instantiate(FleshImpactParticleSystem, Hit.point, Quaternion.LookRotation(Hit.normal));
                 var enemy = Hit.rigidbody.GetComponent<Enemy>();
-                enemy.TakeDamage(50);
+                enemy.TakeDamage(damage);
                 if(enemy.Health <= 0) {
                     playerPoints += 10;
                 }
