@@ -7,6 +7,7 @@ public class Player : MonoBehaviour, IDamageable
 {
     [SerializeField]
     private int Health = 300;
+    public int points = 0;
     public Text hudHealth;
 
     public void TakeDamage(int Damage)
@@ -16,6 +17,10 @@ public class Player : MonoBehaviour, IDamageable
         {
             gameObject.SetActive(false);
         }
+    }
+    public void increaseHealth(int amount)
+    {
+        Health+=amount;
     }
 
     void Update()

@@ -16,11 +16,13 @@ public class Enemy : PoolableObject, IDamageable
     private const string ATTACK_TRIGGER = "Attack";
 
     public WeaponSystem weaponSystem = null;
+    public Player player;
 
     private void Awake()
     {
         AttackRadius.OnAttack += OnAttack;
         weaponSystem = GameObject.Find("GunHolder").GetComponent<WeaponSystem>();
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
     }
 
     private void OnAttack(IDamageable Target)
@@ -96,7 +98,7 @@ public class Enemy : PoolableObject, IDamageable
         Health -= Damage;
         if (Health <= 0)
         {
-            weaponSystem.playerPoints += 10;
+            player.points += 10;
             gameObject.SetActive(false);
         }
     }

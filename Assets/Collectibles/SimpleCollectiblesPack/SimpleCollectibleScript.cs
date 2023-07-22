@@ -18,9 +18,13 @@ public class SimpleCollectibleScript : MonoBehaviour {
 
 	public GameObject collectEffect;
 
+	public Player player;
+	public WeaponSystem weaponSystem;
+
 	// Use this for initialization
 	void Start () {
-		
+		player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+		weaponSystem = gameObject.GetComponent<WeaponSystem>();
 	}
 	
 	// Update is called once per frame
@@ -30,8 +34,7 @@ public class SimpleCollectibleScript : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider other)
-	{
-        Debug.Log("Collision Collision");
+	{     
         if (other.tag=="Player"){
 			Collect ();
 		}
@@ -53,22 +56,23 @@ public class SimpleCollectibleScript : MonoBehaviour {
 		}
 		if (CollectibleType == CollectibleTypes.Type1) {
 
-			//Add in code here;
-
-			Debug.Log ("Do NoType Command");
+			//Bandages
+			player.increaseHealth(20);
+            Debug.Log("Health increased by 20");
+           
 		}
 		if (CollectibleType == CollectibleTypes.Type2) {
 
-			//Add in code here;
-
-			Debug.Log ("Do NoType Command");
+			//50$ of cash
+			player.points += 50;
+			Debug.Log ("Cash increased by 50");
 		}
 		if (CollectibleType == CollectibleTypes.Type3) {
 
-			//Add in code here;
-
-			Debug.Log ("Do NoType Command");
-		}
+			//100$ of cash;
+			player.points += 100;
+            Debug.Log("Cash increased by 100");
+        }
 		if (CollectibleType == CollectibleTypes.Type4) {
 
 			//Add in code here;

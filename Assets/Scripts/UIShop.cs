@@ -19,13 +19,15 @@ public class UIShop : MonoBehaviour
 	public bool wave = false;
 	bool shopActive;
 
+	public Player gracz; 
+
 	void Start()
 	{
 		canvas.SetActive(false);
 		Button assault = assaultButton.GetComponent<Button>();
 		Button shotgun = shotgunButton.GetComponent<Button>();
-
-		assault.onClick.AddListener(buyAssault);
+        gracz = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        assault.onClick.AddListener(buyAssault);
 		shotgun.onClick.AddListener(buyShotgun);
 	}
 
@@ -66,17 +68,17 @@ public class UIShop : MonoBehaviour
 
 	void buyAssault()
 	{
-		if(!weaponSystem.weaponLock[1] && weaponSystem.playerPoints >= 30)
+		if(!weaponSystem.weaponLock[1] && gracz.points >= 30)
         {
 			weaponSystem.weaponLock[1] = true;
-			weaponSystem.playerPoints -= 30;
+			gracz.points -= 30;
 			shopAlerts.text = "You bought assault gun!";
 
 		} else if(weaponSystem.weaponLock[1])
         {
 			shopAlerts.text = "You already bought this weapon!";
 			
-		} else if (weaponSystem.playerPoints < 30)
+		} else if (gracz.points < 30)
         {
 			shopAlerts.text = "You don't have enough money!";
 		}
@@ -86,10 +88,10 @@ public class UIShop : MonoBehaviour
 
 	void buyShotgun()
 	{
-		if (!weaponSystem.weaponLock[2] && weaponSystem.playerPoints >= 15)
+		if (!weaponSystem.weaponLock[2] && gracz.points >= 15)
 		{
 			weaponSystem.weaponLock[2] = true;
-			weaponSystem.playerPoints -= 15;
+            gracz.points -= 15;
 			shopAlerts.text = "You bought shotgun!";
 		}
 		else if (weaponSystem.weaponLock[2])
@@ -97,7 +99,7 @@ public class UIShop : MonoBehaviour
 			shopAlerts.text = "You already bought this weapon!";
 
 		}
-		else if (weaponSystem.playerPoints < 15)
+		else if (gracz.points < 15)
 		{
 			shopAlerts.text = "You don't have enough money!";
 		}

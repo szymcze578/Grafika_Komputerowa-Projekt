@@ -46,7 +46,9 @@ public class WeaponSystem : MonoBehaviour
     bool shooting, reloading, readyToShoot;
     public bool blockShooting = false;
 
-    public int playerPoints = 0;
+    Player player;
+
+    //public int playerPoints = 0;
 
 
     // Start is called before the first frame update
@@ -54,6 +56,7 @@ public class WeaponSystem : MonoBehaviour
     {
         anim = transform.root.GetComponent<Animator>();
         SelectWeapon(1);     
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
     }
 
     // Update is called once per frame
@@ -62,7 +65,7 @@ public class WeaponSystem : MonoBehaviour
         MyInput();
         ammoDisplay.text = bulletsLeft + "/" + magazineSize;
         ammoAnimation.text = string.Concat(Enumerable.Repeat("I", bulletsLeft));
-        pointsDisplay.text = playerPoints.ToString() + " $";
+        pointsDisplay.text = player.points.ToString() + " $";
         if (bulletsLeft < 0.5*magazineSize)
             hudInfo.text = "Press R to reload";
 
@@ -138,7 +141,7 @@ public class WeaponSystem : MonoBehaviour
                 var enemy = Hit.rigidbody.GetComponent<Enemy>();
                 enemy.TakeDamage(damage);
                 if(enemy.Health <= 0) {
-                    playerPoints += 10;
+                    player.points += 10;
                 }
             }
         else {

@@ -8,10 +8,12 @@ public class Bullet : MonoBehaviour
 
     public float life = 3;
     public WeaponSystem gunHolder = null;
+    public Player player;
 
     private void Awake()
     {
         gunHolder = GameObject.Find("GunHolder").GetComponent<WeaponSystem>();
+        player = gameObject.GetComponent<Player>();
         Destroy(gameObject, life);
     }
 
@@ -19,7 +21,7 @@ public class Bullet : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            gunHolder.playerPoints += 10;
+            player.points += 10;
             Destroy(collision.gameObject);   
         }
 
