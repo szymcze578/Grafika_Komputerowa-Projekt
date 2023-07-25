@@ -71,6 +71,7 @@ public class UIShop : MonoBehaviour
 		if(!weaponSystem.weaponLock[1] && gracz.points >= 30)
         {
 			weaponSystem.weaponLock[1] = true;
+			weaponSystem.magazinesLeft[1] = 1;
 			gracz.points -= 30;
 			shopAlerts.text = "You bought assault gun!";
 
@@ -91,7 +92,8 @@ public class UIShop : MonoBehaviour
 		if (!weaponSystem.weaponLock[2] && gracz.points >= 15)
 		{
 			weaponSystem.weaponLock[2] = true;
-            gracz.points -= 15;
+			weaponSystem.magazinesLeft[2] = 1;
+			gracz.points -= 15;
 			shopAlerts.text = "You bought shotgun!";
 		}
 		else if (weaponSystem.weaponLock[2])

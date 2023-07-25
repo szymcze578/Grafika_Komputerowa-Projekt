@@ -31,9 +31,13 @@ public class WeaponSystem : MonoBehaviour
     public Text ammoAnimation;
     public Text pointsDisplay;
     public Text hudInfo;
+    public Text magazinesLeftUI;
 
-    public int selectedWeapon = 1; // 1 - pistol, 2 - assault, 3 - shotgun
+    // 1 - pistol, 2 - assault, 3 - shotgun
+    public int selectedWeapon = 1; 
     public bool[] weaponLock = { true, false, false };
+
+    public int[] magazinesLeft = { 3, 0, 0 };
 
     public float bulletSpeed = 10;
 
@@ -42,7 +46,8 @@ public class WeaponSystem : MonoBehaviour
     public int magazineSize, bulletsPerTab;
     public bool allowButtonHold;
 
-    int bulletsLeft, bulletsShot, damage;
+    int[] bulletsLeft = { 10, 30, 15 };
+    int bulletsShot, damage;
     bool shooting, reloading, readyToShoot;
     public bool blockShooting = false;
 
@@ -63,10 +68,14 @@ public class WeaponSystem : MonoBehaviour
     void Update()
     {
         MyInput();
-        ammoDisplay.text = bulletsLeft + "/" + magazineSize;
-        ammoAnimation.text = string.Concat(Enumerable.Repeat("I", bulletsLeft));
+
+        ammoDisplay.text = bulletsLeft[selectedWeapon - 1] + "/" + magazineSize;
+
+        
+        ammoAnimation.text = string.Concat(Enumerable.Repeat("I", bulletsLeft[selectedWeapon - 1]));
+
         pointsDisplay.text = player.points.ToString() + " $";
-        if (bulletsLeft < 0.5*magazineSize)
+        if (bulletsLeft[selectedWeapon - 1] < 0.5*magazineSize)
             hudInfo.text = "Press R to reload";
 
     }
@@ -85,10 +94,10 @@ public class WeaponSystem : MonoBehaviour
         else
             shooting = Input.GetKeyDown(KeyCode.Mouse0);
 
-        if (Input.GetKeyDown(KeyCode.R) && bulletsLeft < magazineSize && !reloading)
+        if (Input.GetKeyDown(KeyCode.R) && bulletsLeft[selectedWeapon - 1] < magazineSize && !reloading && magazinesLeft[selectedWeapon - 1] > 0)
             Reload();
 
-        if (blockShooting && readyToShoot && shooting && !reloading && bulletsLeft > 0)
+        if (blockShooting && readyToShoot && shooting && !reloading && bulletsLeft[selectedWeapon - 1] > 0)
         {
             bulletsShot = bulletsPerTab;
             Shoot();
@@ -98,6 +107,7 @@ public class WeaponSystem : MonoBehaviour
 
     private void Reload()
     {
+        
         reloading = true;
         anim.SetTrigger("reload");
         Invoke("ReloadFinished", 3.0f/reloadTime);
@@ -117,11 +127,11 @@ public class WeaponSystem : MonoBehaviour
 
         }
 
-        bulletsLeft--;
+        bulletsLeft[selectedWeapon - 1]--;
         bulletsShot--;
         Invoke("ResetShot", timeBetweenShoting);
 
-        if (bulletsShot > 0 && bulletsLeft > 0)
+        if (bulletsShot > 0 && bulletsLeft[selectedWeapon - 1] > 0)
             Invoke("Shoot", timeBetweenShots);
     }
 
@@ -158,7 +168,9 @@ public class WeaponSystem : MonoBehaviour
 
     private void ReloadFinished()
     {
-        bulletsLeft = magazineSize;
+        magazinesLeft[selectedWeapon - 1]--;
+        magazinesLeftUI.text = string.Concat(Enumerable.Repeat("X", magazinesLeft[selectedWeapon - 1]));
+        bulletsLeft[selectedWeapon - 1] = magazineSize;
         reloading = false;
     }
 
@@ -183,7 +195,6 @@ public class WeaponSystem : MonoBehaviour
 
                 bulletsPerTab = 1;
                 magazineSize = 10;
-                bulletsLeft = 10;
                 damage = 20;
 
                 timeBetweenShoting = 0.2f;
@@ -200,7 +211,6 @@ public class WeaponSystem : MonoBehaviour
 
                 bulletsPerTab = 3;
                 magazineSize = 30;
-                bulletsLeft = 30;
                 damage = 30;
 
                 timeBetweenShoting = 0.1f;
@@ -218,7 +228,6 @@ public class WeaponSystem : MonoBehaviour
 
                 bulletsPerTab = 1;
                 magazineSize = 15;
-                bulletsLeft = 15;
 
                 timeBetweenShoting = 1f;
                 reloadTime = 0.7f; // 3s / 0.7
