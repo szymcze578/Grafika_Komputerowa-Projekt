@@ -6,9 +6,11 @@ using UnityEngine.UI;
 public class Player : MonoBehaviour, IDamageable
 {
     [SerializeField]
-    private int Health = 300;
+    private int Health = 100;
     public int points = 0;
-    public Text hudHealth;
+
+
+    public HealthBar healthBar;
 
     public void TakeDamage(int Damage)
     {
@@ -17,15 +19,12 @@ public class Player : MonoBehaviour, IDamageable
         {
             gameObject.SetActive(false);
         }
+        healthBar.SetHealth(Health);
     }
     public void increaseHealth(int amount)
     {
         Health+=amount;
-    }
-
-    void Update()
-    {
-        hudHealth.text = "Health: " + Health;
+        healthBar.SetHealth(Health);
     }
 
     public Transform GetTransform()
