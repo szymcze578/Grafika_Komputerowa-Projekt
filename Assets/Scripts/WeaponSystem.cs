@@ -119,20 +119,49 @@ public class WeaponSystem : MonoBehaviour
 
         //var bullet = Instantiate(bulletPrefab, bulletSpawnPoint.transform.position, bulletSpawnPoint.transform.rotation);
         //bullet.GetComponent<Rigidbody>().velocity = bulletSpawnPoint.transform.forward * bulletSpeed;
+        if (selectedWeapon == 3)
+        {
+            if (Physics.Raycast(bulletSpawnPoint.transform.position, Quaternion.Euler(0f, -15f, 0f) * bulletSpawnPoint.transform.forward, out RaycastHit hit, float.MaxValue, Mask))
+            {
+                TrailRenderer trail = Instantiate(BulletTrail, bulletSpawnPoint.transform.position, Quaternion.identity);
+                StartCoroutine(SpawnTrail(trail, hit));
+            }
+            if (Physics.Raycast(bulletSpawnPoint.transform.position, bulletSpawnPoint.transform.forward, out RaycastHit hit2, float.MaxValue, Mask))
+            {
+                TrailRenderer trail2 = Instantiate(BulletTrail, bulletSpawnPoint.transform.position, Quaternion.identity);
+                StartCoroutine(SpawnTrail(trail2, hit2));
+            }
+            if (Physics.Raycast(bulletSpawnPoint.transform.position, Quaternion.Euler(0f, 15f, 0f) * bulletSpawnPoint.transform.forward, out RaycastHit hit3, float.MaxValue, Mask))
+            {
+                TrailRenderer trail3 = Instantiate(BulletTrail, bulletSpawnPoint.transform.position, Quaternion.identity);
+                StartCoroutine(SpawnTrail(trail3, hit3));
+            }
 
-        if(Physics.Raycast(bulletSpawnPoint.transform.position, bulletSpawnPoint.transform.forward, out RaycastHit hit, float.MaxValue, Mask)) {
-            TrailRenderer trail = Instantiate(BulletTrail, bulletSpawnPoint.transform.position, Quaternion.identity);
+            bulletsLeft[selectedWeapon - 1] -= 3;
+            bulletsShot -= 3;
+            Invoke("ResetShot", timeBetweenShoting);
 
-            StartCoroutine(SpawnTrail(trail, hit));
+            if (bulletsShot > 0 && bulletsLeft[selectedWeapon - 1] > 0)
+                Invoke("Shoot", timeBetweenShots);
+        }
+        else
+        {
+            if (Physics.Raycast(bulletSpawnPoint.transform.position, bulletSpawnPoint.transform.forward, out RaycastHit hit, float.MaxValue, Mask))
+            {
+                TrailRenderer trail = Instantiate(BulletTrail, bulletSpawnPoint.transform.position, Quaternion.identity);
+
+                StartCoroutine(SpawnTrail(trail, hit));
+
+            }
+
+            bulletsLeft[selectedWeapon - 1]--;
+            bulletsShot--;
+            Invoke("ResetShot", timeBetweenShoting);
+
+            if (bulletsShot > 0 && bulletsLeft[selectedWeapon - 1] > 0)
+                Invoke("Shoot", timeBetweenShots);
 
         }
-
-        bulletsLeft[selectedWeapon - 1]--;
-        bulletsShot--;
-        Invoke("ResetShot", timeBetweenShoting);
-
-        if (bulletsShot > 0 && bulletsLeft[selectedWeapon - 1] > 0)
-            Invoke("Shoot", timeBetweenShots);
     }
 
     private IEnumerator SpawnTrail(TrailRenderer Trail, RaycastHit Hit)
@@ -187,7 +216,7 @@ public class WeaponSystem : MonoBehaviour
         switch(weaponIndex)
         {
             case 1:
-                bulletSpawnPoint.transform.Translate(0.0f, 0.08f, 0.2f);
+                bulletSpawnPoint.transform.Translate(0.0f, 0.08f, 0.10f);
                 readyToShoot = true;
                 allowButtonHold = false;
                 shooting = false;
