@@ -68,15 +68,9 @@ public class WeaponSystem : MonoBehaviour
     void Update()
     {
         MyInput();
-
-        ammoDisplay.text = bulletsLeft[selectedWeapon - 1] + "/" + magazineSize;
-
-        ammoAnimation.text = string.Concat(Enumerable.Repeat("I", bulletsLeft[selectedWeapon - 1]));
-
+        SetUpHud();
         pointsDisplay.text = player.points.ToString(); 
-        if (bulletsLeft[selectedWeapon - 1] < 0.5*magazineSize)
-            hudInfo.text = "Press R to reload";
-
+        
     }
 
     private void MyInput()
@@ -159,6 +153,8 @@ public class WeaponSystem : MonoBehaviour
                 Invoke("Shoot", timeBetweenShots);
 
         }
+
+       
     }
 
     private IEnumerator SpawnTrail(TrailRenderer Trail, RaycastHit Hit)
@@ -194,15 +190,10 @@ public class WeaponSystem : MonoBehaviour
 
     private void ReloadFinished()
     {
-
-        if (selectedWeapon != 1)
-        {
-            magazinesLeftUI.text = string.Concat(Enumerable.Repeat("X", magazinesLeft[selectedWeapon - 1]));
-            magazinesLeft[selectedWeapon - 1]--;
-        }
-
         bulletsLeft[selectedWeapon - 1] = magazineSize;
         reloading = false;
+        magazinesLeft[selectedWeapon - 1]--;
+        
     }
 
     void SelectWeapon(int weaponIndex)
@@ -266,11 +257,26 @@ public class WeaponSystem : MonoBehaviour
                 break;
         }
 
-        if(selectedWeapon == 1)
+        
+        anim.SetFloat("reloadTime", reloadTime);
+
+    }
+
+    void SetUpHud()
+    {
+
+        if (bulletsLeft[selectedWeapon - 1] < 0.5 * magazineSize)
+            hudInfo.text = "Press R to reload";
+
+        if (selectedWeapon == 1)
             magazinesLeftUI.text = "∞";
         else
             magazinesLeftUI.text = string.Concat(Enumerable.Repeat("X", magazinesLeft[selectedWeapon - 1]));
 
-        anim.SetFloat("reloadTime", reloadTime); 
+        ammoDisplay.text = bulletsLeft[selectedWeapon - 1] + "/" + magazineSize;
+        ammoAnimation.text = string.Concat(Enumerable.Repeat("I", bulletsLeft[selectedWeapon - 1]));
+
+        
+
     }
 }
