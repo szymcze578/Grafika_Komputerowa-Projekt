@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -37,7 +37,7 @@ public class WeaponSystem : MonoBehaviour
     public int selectedWeapon = 1; 
     public bool[] weaponLock = { true, false, false };
 
-    public int[] magazinesLeft = { 3, 0, 0 };
+    public int[] magazinesLeft = { 1, 0, 0 };
 
     public float bulletSpeed = 10;
 
@@ -71,10 +71,9 @@ public class WeaponSystem : MonoBehaviour
 
         ammoDisplay.text = bulletsLeft[selectedWeapon - 1] + "/" + magazineSize;
 
-        
         ammoAnimation.text = string.Concat(Enumerable.Repeat("I", bulletsLeft[selectedWeapon - 1]));
 
-        pointsDisplay.text = player.points.ToString() + " $";
+        pointsDisplay.text = player.points.ToString(); 
         if (bulletsLeft[selectedWeapon - 1] < 0.5*magazineSize)
             hudInfo.text = "Press R to reload";
 
@@ -149,9 +148,7 @@ public class WeaponSystem : MonoBehaviour
             if (Physics.Raycast(bulletSpawnPoint.transform.position, bulletSpawnPoint.transform.forward, out RaycastHit hit, float.MaxValue, Mask))
             {
                 TrailRenderer trail = Instantiate(BulletTrail, bulletSpawnPoint.transform.position, Quaternion.identity);
-
                 StartCoroutine(SpawnTrail(trail, hit));
-
             }
 
             bulletsLeft[selectedWeapon - 1]--;
@@ -197,8 +194,13 @@ public class WeaponSystem : MonoBehaviour
 
     private void ReloadFinished()
     {
-        magazinesLeft[selectedWeapon - 1]--;
-        magazinesLeftUI.text = string.Concat(Enumerable.Repeat("X", magazinesLeft[selectedWeapon - 1]));
+
+        if (selectedWeapon != 1)
+        {
+            magazinesLeftUI.text = string.Concat(Enumerable.Repeat("X", magazinesLeft[selectedWeapon - 1]));
+            magazinesLeft[selectedWeapon - 1]--;
+        }
+
         bulletsLeft[selectedWeapon - 1] = magazineSize;
         reloading = false;
     }
@@ -260,8 +262,15 @@ public class WeaponSystem : MonoBehaviour
 
                 timeBetweenShoting = 1f;
                 reloadTime = 0.7f; // 3s / 0.7
+
                 break;
         }
-           anim.SetFloat("reloadTime", reloadTime); 
+
+        if(selectedWeapon == 1)
+            magazinesLeftUI.text = "∞";
+        else
+            magazinesLeftUI.text = string.Concat(Enumerable.Repeat("X", magazinesLeft[selectedWeapon - 1]));
+
+        anim.SetFloat("reloadTime", reloadTime); 
     }
 }
