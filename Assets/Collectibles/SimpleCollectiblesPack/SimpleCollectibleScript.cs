@@ -24,8 +24,8 @@ public class SimpleCollectibleScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-		weaponSystem = gameObject.GetComponent<WeaponSystem>();
-	}
+		weaponSystem = GameObject.Find("GunHolder").GetComponent<WeaponSystem>();
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -57,28 +57,32 @@ public class SimpleCollectibleScript : MonoBehaviour {
 		if (CollectibleType == CollectibleTypes.Type1) {
 
 			//Bandages
-			player.increaseHealth(20);
-            Debug.Log("Health increased by 20");
-           
+			if (player.increaseHealth(20)) {
+                Destroy(gameObject);
+                Debug.Log("Health increased by 20");
+            }
+			
 		}
 		if (CollectibleType == CollectibleTypes.Type2) {
 
 			//50$ of cash
 			player.points += 50;
 			Debug.Log ("Cash increased by 50");
-		}
+            Destroy(gameObject);
+        }
 		if (CollectibleType == CollectibleTypes.Type3) {
 
 			//100$ of cash;
 			player.points += 100;
-            Debug.Log("Cash increased by 100");
+            Destroy(gameObject);
         }
 		if (CollectibleType == CollectibleTypes.Type4) {
 
-			//Add in code here;
+			weaponSystem.magazinesLeft[weaponSystem.selectedWeapon - 1] += 1;
+			Debug.Log ("Magazin added");
+            Destroy(gameObject);
 
-			Debug.Log ("Do NoType Command");
-		}
+        }
 		if (CollectibleType == CollectibleTypes.Type5) {
 
 			//Add in code here;
@@ -86,6 +90,6 @@ public class SimpleCollectibleScript : MonoBehaviour {
 			Debug.Log ("Do NoType Command");
 		}
 
-		Destroy (gameObject);
+
 	}
 }

@@ -21,10 +21,19 @@ public class Player : MonoBehaviour, IDamageable
         }
         healthBar.SetHealth(Health);
     }
-    public void increaseHealth(int amount)
+    public bool increaseHealth(int amount)
     {
-        Health+=amount;
+        if(Health == 100) {
+            return false;
+        }
+
+        Health += amount;
+
+        if (Health > 100)
+            Health = 100;
+
         healthBar.SetHealth(Health);
+        return true;
     }
 
     public Transform GetTransform()
