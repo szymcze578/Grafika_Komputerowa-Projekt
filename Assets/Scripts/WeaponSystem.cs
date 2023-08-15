@@ -39,7 +39,7 @@ public class WeaponSystem : MonoBehaviour
 
     public int[] magazinesLeft = { 1, 0, 0 };
 
-    public float bulletSpeed = 10;
+    public float bulletSpeed = 0.25f;
 
     private Animator anim;
     public float timeBetweenShoting, reloadTime, timeBetweenShots;
@@ -159,20 +159,24 @@ public class WeaponSystem : MonoBehaviour
 
     private IEnumerator SpawnTrail(TrailRenderer Trail, RaycastHit Hit)
     {
-        float time = 0;
         Vector3 startPosition = Trail.transform.position;
 
-        while(time < 1) {
-            Trail.transform.position = Vector3.Lerp(startPosition, Hit.point, time);
-            time += Time.deltaTime / Trail.time;
+        float distance = Vector3.Distance(Trail.transform.position, Hit.point);
+        float startingDistance = distance;
+
+        while (distance > 0)
+        {
+            Trail.transform.position = Vector3.Lerp(startPosition, Hit.point, 1 - (distance / startingDistance));
+            distance -= Time.deltaTime * bulletSpeed;
+
             yield return null;
         }
         Trail.transform.position = Hit.point;
         if(Hit.collider.CompareTag("Enemy")) {
-                //Instantiate(FleshImpactParticleSystem, Hit.point, Quaternion.LookRotation(Hit.normal));
-                var enemy = Hit.rigidbody.GetComponent<Enemy>();
-                enemy.TakeDamage(damage);
-                if(enemy.Health <= 0) {
+            var enemy = Hit.rigidbody.GetComponent<Enemy>();
+            enemy.TakeDamage(damage);
+            Instantiate(FleshImpactParticleSystem, Hit.point, Quaternion.LookRotation(Hit.normal));
+            if (enemy.Health <= 0) {
                     player.points += 10;
                 }
             }

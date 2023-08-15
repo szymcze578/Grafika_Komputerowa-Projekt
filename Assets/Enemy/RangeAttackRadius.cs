@@ -6,15 +6,15 @@ using UnityEngine.AI;
 public class RangeAttackRadius : AttackRadius
 {
     public NavMeshAgent Agent;
-    public Bullett BulletPrefab;
+    //public Bullett BulletPrefab;
     public Vector3 BulletSpawnOffset = new Vector3(0, 1, 0);
     public LayerMask Mask;
-    private ObjectPool BulletPool;
+    //private ObjectPool BulletPool;
     [SerializeField]
     private float SpherecastRadius = 0.1f;
     private RaycastHit Hit;
     private IDamageable targetDamageable;
-    private Bullett bullet;
+    //private Bullett bullet;
 
     [SerializeField]
     private GameObject bulletSpawnPoint = null;
@@ -27,15 +27,20 @@ public class RangeAttackRadius : AttackRadius
 
     [SerializeField]
     private ParticleSystem FleshImpactParticleSystem;
-    
 
-    protected override void Awake()
-    {
-        base.Awake();
-        BulletPool = ObjectPool.CreateInstance(BulletPrefab, Mathf.CeilToInt((1 / AttackDelay) * BulletPrefab.AutoDestroyTime));
-    }
+    [SerializeField]
+    private Vector3 BulletSpread = new Vector3(0.05f, 0.05f, 0.05f);
 
-    
+    [SerializeField]
+    private float BulletSpeed = 0.25f;
+
+    //protected override void Awake()
+    //{
+    //    base.Awake();
+    //    BulletPool = ObjectPool.CreateInstance(BulletPrefab, 10);
+    //}
+
+
 
     private bool HasLineOfSightTo(Transform Target)
     {
@@ -49,7 +54,7 @@ public class RangeAttackRadius : AttackRadius
         }
         return false;
     }
-
+    /*
     private IEnumerator SpawnTrail(TrailRenderer Trail, RaycastHit Hit)
     {
         float time = 0;
@@ -72,6 +77,35 @@ public class RangeAttackRadius : AttackRadius
         
         Destroy(Trail.gameObject, Trail.time);
     }
+    */
+    private IEnumerator SpawnTrail(IDamageable idamageable, TrailRenderer Trail, Vector3 HitPoint, RaycastHit hit)
+    {
+        Vector3 startPosition = Trail.transform.position;
+
+        float distance = Vector3.Distance(Trail.transform.position, HitPoint);
+        float startingDistance = distance;
+
+        while (distance > 0)
+        {
+            Trail.transform.position = Vector3.Lerp(startPosition, HitPoint, 1 - (distance / startingDistance));
+            distance -= Time.deltaTime * BulletSpeed;
+
+            yield return null;
+        }
+
+        Trail.transform.position = HitPoint;
+
+        if (hit.collider.CompareTag("Player"))
+        {
+            idamageable.TakeDamage(Damage);
+            Instantiate(FleshImpactParticleSystem, Hit.point, Quaternion.LookRotation(hit.normal));
+        } else
+        {
+            Instantiate(ImpactParticleSystem, HitPoint, Quaternion.LookRotation(hit.normal));
+        }
+        yield return new WaitForSeconds(Trail.time);
+        Destroy(Trail.gameObject, Trail.time);
+    }
 
     protected override IEnumerator Attack()
     {
@@ -88,33 +122,29 @@ public class RangeAttackRadius : AttackRadius
                     targetDamageable = Damagesables[i];
                     OnAttack?.Invoke(Damagesables[i]);
                     Agent.isStopped = true;
-                    //Agent.enabled = false;
                     break;
                 }
             }
 
             if (targetDamageable != null)
             {
-                PoolableObject poolableObject = BulletPool.GetObject();
-                if (poolableObject != null)
+                Vector3 direction = ((targetDamageable.GetTransform().position + BulletSpawnOffset) - (transform.position + BulletSpawnOffset)).normalized + new Vector3(
+                    Random.Range(-BulletSpread.x, BulletSpread.x),
+                    Random.Range(-BulletSpread.y, BulletSpread.y),
+                    Random.Range(-BulletSpread.z, BulletSpread.z)
+                    );
+                direction.y = 0;
+                direction.Normalize();
+                TrailRenderer trail = Instantiate(BulletTrail, transform.position + BulletSpawnOffset, Quaternion.identity);
+                if (Physics.Raycast(transform.position + BulletSpawnOffset, direction, out RaycastHit hit, float.MaxValue, Mask)) 
                 {
-                    //bullet = poolableObject.GetComponent<Bullett>();
-                    //bullet.Damage = Damage;
-                   //bullet.transform.position = transform.position + BulletSpawnOffset;
-                   //bullet.transform.rotation = Agent.transform.rotation;
-                   //bullet.Rigidbody.AddForce(Agent.transform.forward * BulletPrefab.MoveSpeed, ForceMode.VelocityChange);
-
-                   if(Physics.Raycast(transform.position + BulletSpawnOffset, Agent.transform.forward, out RaycastHit hit, float.MaxValue, Mask)) 
-                    {
-                        TrailRenderer trail = Instantiate(BulletTrail, transform.position + BulletSpawnOffset, Quaternion.identity);
-                        StartCoroutine(SpawnTrail(trail, hit));
-                    }
-                }
+                    StartCoroutine(SpawnTrail(targetDamageable, trail, hit.point, hit));
+                    targetDamageable = null;
+                } 
             }
             else
             {
                 Agent.isStopped = false;
-                //Agent.enabled = true;
             }
 
             yield return Wait;
@@ -122,14 +152,11 @@ public class RangeAttackRadius : AttackRadius
             if(targetDamageable == null || !HasLineOfSightTo(targetDamageable.GetTransform()))
             {
                 Agent.isStopped = false;
-                //Agent.enabled = true;
             }
 
             Damagesables.RemoveAll(DisabledDamageables);
         }
-
         Agent.isStopped = false;
-        //Agent.enabled = true;
         AttackCoroutine = null;
     }
 
@@ -140,7 +167,6 @@ public class RangeAttackRadius : AttackRadius
         if(AttackCoroutine == null)
         {
             Agent.isStopped = false;
-            //Agent.enabled = true;
         }
     }
 } 

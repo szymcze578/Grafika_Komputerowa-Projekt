@@ -107,6 +107,8 @@ MonoBehaviour:
   Agent: {fileID: 2033343458048491083}
   EnemyScriptableObject: {fileID: 11400000, guid: cfd3eaa1d37d1044892eb428f4639efe, type: 2}
   Health: 100
+  weaponSystem: {fileID: 0}
+  player: {fileID: 0}
 --- !u!54 &6000834441300735224
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -167,7 +169,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 1.5
+  m_Radius: 7
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8197815122850371014
 MonoBehaviour:
@@ -185,16 +187,17 @@ MonoBehaviour:
   Damage: 10
   AttackDelay: 6
   Agent: {fileID: 2033343458048491083}
-  BulletPrefab: {fileID: 1498379059122610747, guid: 68cb1e5c70ba7794294590c8dddada35, type: 3}
   BulletSpawnOffset: {x: 0, y: 1, z: 0}
   Mask:
     serializedVersion: 2
     m_Bits: 65
   SpherecastRadius: 0.1
-  bulletSpawnPoint: {fileID: 0}
+  bulletSpawnPoint: {fileID: 8181044982200431606}
   BulletTrail: {fileID: 328621789431213768, guid: 43559d27d223bf340b413fde1315c256, type: 3}
   ImpactParticleSystem: {fileID: 9064919875212695174, guid: a5e1e2c4d2cd81f4abed6272a2b8187a, type: 3}
   FleshImpactParticleSystem: {fileID: 702519097773429891, guid: 4223300402336a943a87f36c11209006, type: 3}
+  BulletSpread: {x: 0.2, y: 0.2, z: 0.2}
+  BulletSpeed: 200
 --- !u!1 &5226460267113973893
 GameObject:
   m_ObjectHideFlags: 0
