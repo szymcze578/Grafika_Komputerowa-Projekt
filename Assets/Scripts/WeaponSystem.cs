@@ -37,7 +37,7 @@ public class WeaponSystem : MonoBehaviour
     public int selectedWeapon = 1; 
     public bool[] weaponLock = { true, false, false };
 
-    public int[] magazinesLeft = { 1, 0, 0 };
+    public int[] magazinesLeft = { 999, 0, 0 };
 
     public float bulletSpeed = 0.25f;
 

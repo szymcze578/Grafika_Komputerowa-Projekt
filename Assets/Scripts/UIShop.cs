@@ -21,7 +21,6 @@ public class UIShop : MonoBehaviour
 	public GameObject assaultButton;
 	public GameObject shotgunButton;
 
-    public GameObject pistolAmmoButton;
     public GameObject shotgunAmmoButton;
     public GameObject assaultAmmoButton;
 
@@ -36,14 +35,12 @@ public class UIShop : MonoBehaviour
 		canvas.SetActive(false);
         Button shotgun = shotgunButton.GetComponent<Button>();
         Button assault = assaultButton.GetComponent<Button>();
-        Button pistolAmmo = pistolAmmoButton.GetComponent<Button>();
         Button shotgunAmmo = shotgunAmmoButton.GetComponent<Button>();
         Button assaultAmmo = assaultAmmoButton.GetComponent<Button>();
 
         gracz = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         assault.onClick.AddListener(buyAssault);
 		shotgun.onClick.AddListener(buyShotgun);
-        pistolAmmo.onClick.AddListener(buyPistolAmmo);
         shotgunAmmo.onClick.AddListener(buyShotgunAmmo);
         assaultAmmo.onClick.AddListener(buyAssaultAmmo);
     }
@@ -91,15 +88,18 @@ public class UIShop : MonoBehaviour
 			weaponSystem.weaponLock[1] = true;
 			weaponSystem.magazinesLeft[1] = 1;
 			gracz.points -= 30;
-			shopAlerts.text = "You bought assault gun!";
+            shopAlerts.color = Color.green;
+            shopAlerts.text = "You bought assault gun!";
 
 		} else if(weaponSystem.weaponLock[1])
         {
-			shopAlerts.text = "You already bought this weapon!";
+            shopAlerts.color = Color.red;
+            shopAlerts.text = "You already bought this weapon!";
 			
 		} else if (gracz.points < 30)
         {
-			shopAlerts.text = "You don't have enough money!";
+            shopAlerts.color = Color.red;
+            shopAlerts.text = "You don't have enough money!";
 		}
 		Invoke("ResetShopAlerts", 2.0f);
 
@@ -112,35 +112,23 @@ public class UIShop : MonoBehaviour
 			weaponSystem.weaponLock[2] = true;
 			weaponSystem.magazinesLeft[2] = 1;
 			gracz.points -= 15;
-			shopAlerts.text = "You bought shotgun!";
+            shopAlerts.color = Color.green;
+            shopAlerts.text = "You bought shotgun!";
 		}
 		else if (weaponSystem.weaponLock[2])
 		{
-			shopAlerts.text = "You already bought this weapon!";
-
+            shopAlerts.color = Color.red;
+            shopAlerts.text = "You already bought this weapon!";
 		}
 		else if (gracz.points < 15)
 		{
-			shopAlerts.text = "You don't have enough money!";
+            shopAlerts.color = Color.red;
+            shopAlerts.text = "You don't have enough money!";
 		}
 
 		Invoke("ResetShopAlerts", 2.0f);
 
 	}
-
-	void buyPistolAmmo()
-	{
-        if(gracz.points >= 10)
-		{
-			weaponSystem.magazinesLeft[0] += 1;
-			gracz.points -= 10;
-            shopAlerts.text = "You bought ammo to pistol!";
-        }
-		else
-		{
-            shopAlerts.text = "You don't have enough money!";
-        }
-    }
 
     void buyShotgunAmmo()
     {
@@ -148,14 +136,17 @@ public class UIShop : MonoBehaviour
         {
             weaponSystem.magazinesLeft[2] += 1;
             gracz.points -= 15;
+            shopAlerts.color = Color.green;
             shopAlerts.text = "You bought ammo to shotgun!";
         }
         else if(!weaponSystem.weaponLock[2])
         {
+            shopAlerts.color = Color.red;
             shopAlerts.text = "You don't have shotgun yet!";
         }
 		else if (gracz.points < 15)
 		{
+            shopAlerts.color = Color.red;
             shopAlerts.text = "You don't have enough money!";
         }
     }
@@ -166,14 +157,17 @@ public class UIShop : MonoBehaviour
         {
             weaponSystem.magazinesLeft[1] += 1;
             gracz.points -= 25;
+			shopAlerts.color = Color.green;
             shopAlerts.text = "You bought ammo to assault!";
         }
         else if (!weaponSystem.weaponLock[2])
         {
+            shopAlerts.color = Color.red;
             shopAlerts.text = "You don't have assault yet!";
         }
         else if (gracz.points < 25)
         {
+			shopAlerts.color = Color.red;
             shopAlerts.text = "You don't have enough money!";
         }
     }
