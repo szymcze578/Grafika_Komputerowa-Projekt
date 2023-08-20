@@ -275,7 +275,10 @@ public class WeaponSystem : MonoBehaviour
         if (selectedWeapon == 1)
             magazinesLeftUI.text = "∞";
         else
-            magazinesLeftUI.text = string.Concat(Enumerable.Repeat("X", magazinesLeft[selectedWeapon - 1]));
+            if(magazinesLeft[selectedWeapon - 1] > 5)
+                magazinesLeftUI.text = "+" + string.Concat(Enumerable.Repeat("X", 5));
+            else
+                magazinesLeftUI.text = string.Concat(Enumerable.Repeat("X", magazinesLeft[selectedWeapon - 1]));
 
         ammoDisplay.text = bulletsLeft[selectedWeapon - 1] + "/" + magazineSize;
         ammoAnimation.text = string.Concat(Enumerable.Repeat("I", bulletsLeft[selectedWeapon - 1]));
