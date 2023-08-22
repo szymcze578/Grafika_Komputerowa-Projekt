@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae4605cbac908294ab8c2eeed55b587b, type: 3}
+  m_Name: Shotgun
+  m_EditorClassIdentifier: 
+  Volume: 0.4
+  ShootingClip:
+  - {fileID: 8300000, guid: 2e1ea8a23cbb42443b437b5cfd1f95de, type: 3}
+  - {fileID: 8300000, guid: 7875afff45573df4685ebfe6138da2d3, type: 3}
+  - {fileID: 8300000, guid: 5e2d4c14309b0e842b6d58ae7d3e7a49, type: 3}
+  - {fileID: 8300000, guid: 2fae64134eb184f47af78d08ccf10eb0, type: 3}
+  - {fileID: 8300000, guid: aded6b83a1984ea4aa649ee450c96eb0, type: 3}
+  ReloadingClip: {fileID: 8300000, guid: 613d7558ff0b2e244be6c9ea4c76c9e8, type: 3}
+  EmptyClip: {fileID: 8300000, guid: b90cbdb3424482b4a98ff1415b2d8133, type: 3}
+  EquipGun: {fileID: 8300000, guid: e5b68162d54cec9478da4cd29948cd10, type: 3}

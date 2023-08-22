@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae4605cbac908294ab8c2eeed55b587b, type: 3}
+  m_Name: Assault
+  m_EditorClassIdentifier: 
+  Volume: 0.4
+  ShootingClip:
+  - {fileID: 8300000, guid: 55c99c808f239a94a8db4751ca434048, type: 3}
+  - {fileID: 8300000, guid: 75c6910af8084d740bc7ba41d7f23243, type: 3}
+  - {fileID: 8300000, guid: 9b3ce45a2a213244fab9ff397e636c8f, type: 3}
+  - {fileID: 8300000, guid: 2acf78617d03e674fa1711338b2cbf51, type: 3}
+  - {fileID: 8300000, guid: 6e8bf217374b5154e83366da7657aa23, type: 3}
+  ReloadingClip: {fileID: 8300000, guid: d6ee93a157af56445861f564535889fc, type: 3}
+  EmptyClip: {fileID: 8300000, guid: 4f52c39fa1d404349ac050d8cac13485, type: 3}
+  EquipGun: {fileID: 8300000, guid: d38d4de1b584eb1469c375392ae9a20b, type: 3}

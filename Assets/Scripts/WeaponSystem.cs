@@ -25,7 +25,8 @@ public class WeaponSystem : MonoBehaviour
     [SerializeField]
     private LayerMask Mask;
 
-
+    public WeaponAudioConfig[] audioConfig;
+    private AudioSource audioSource;
 
     public Text ammoDisplay;
     public Text ammoAnimation;
@@ -62,6 +63,7 @@ public class WeaponSystem : MonoBehaviour
         anim = transform.root.GetComponent<Animator>();
         SelectWeapon(1);     
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        audioSource = gameObject.transform.GetChild(selectedWeapon-1).gameObject.GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -75,12 +77,16 @@ public class WeaponSystem : MonoBehaviour
 
     private void MyInput()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1) && selectedWeapon != 1) 
+        if (Input.GetKeyDown(KeyCode.Alpha1) && selectedWeapon != 1) {
             SelectWeapon(1);
-        if (Input.GetKeyDown(KeyCode.Alpha2) && weaponLock[1] && selectedWeapon != 2)
+        }
+            
+        if (Input.GetKeyDown(KeyCode.Alpha2) && weaponLock[1] && selectedWeapon != 2){
             SelectWeapon(2);
-        if (Input.GetKeyDown(KeyCode.Alpha3) && weaponLock[2] && selectedWeapon != 3)
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3) && weaponLock[2] && selectedWeapon != 3){
             SelectWeapon(3);
+        }
 
         if (allowButtonHold)
             shooting = Input.GetKey(KeyCode.Mouse0);
@@ -95,20 +101,25 @@ public class WeaponSystem : MonoBehaviour
             bulletsShot = bulletsPerTab;
             Shoot();
         }
+        if (blockShooting && readyToShoot && shooting && !reloading && bulletsLeft[selectedWeapon - 1] <= 0)
+        {
+            audioConfig[selectedWeapon-1].PlayOutOfAmmoClip(audioSource);
+        }
             
     }
 
     private void Reload()
     {
-        
         reloading = true;
         anim.SetTrigger("reload");
         Invoke("ReloadFinished", 3.0f/reloadTime);
+        audioConfig[selectedWeapon-1].PlayReloadingClip(audioSource);
     }
 
     private void Shoot()
     {
         readyToShoot = false;
+        audioConfig[selectedWeapon-1].PlayShootingClip(audioSource);
 
         //var bullet = Instantiate(bulletPrefab, bulletSpawnPoint.transform.position, bulletSpawnPoint.transform.rotation);
         //bullet.GetComponent<Rigidbody>().velocity = bulletSpawnPoint.transform.forward * bulletSpeed;
@@ -204,10 +215,13 @@ public class WeaponSystem : MonoBehaviour
     {
         transform.GetChild(selectedWeapon-1).gameObject.SetActive(false);
         transform.GetChild(weaponIndex-1).gameObject.SetActive(true);
+        audioSource = gameObject.transform.GetChild(weaponIndex-1).gameObject.GetComponent<AudioSource>();
         selectedWeapon = weaponIndex;
         anim.SetInteger("weapon", weaponIndex);
         bulletSpawnPoint.transform.position = transform.GetChild(selectedWeapon-1).position;
         bulletSpawnPoint.transform.rotation = transform.GetChild(selectedWeapon-1).rotation;
+
+        audioConfig[selectedWeapon-1].PlayEquipGunClip(audioSource);
 
         //Change weapon stats
         switch(weaponIndex)

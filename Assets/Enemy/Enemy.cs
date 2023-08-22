@@ -16,6 +16,9 @@ public class Enemy : PoolableObject, IDamageable
     private const string ATTACK_TRIGGER = "Attack";
 
     public WeaponSystem weaponSystem = null;
+    public WeaponAudioConfig audioConfig;
+    private AudioSource audioSource;
+
     public Player player;
 
     private void Awake()
@@ -28,6 +31,7 @@ public class Enemy : PoolableObject, IDamageable
     private void OnAttack(IDamageable Target)
     {
         Animator.SetTrigger(ATTACK_TRIGGER);
+        audioConfig.PlayShootingClip(audioSource);
 
         if (LookCoroutine != null)
         {
@@ -56,6 +60,7 @@ public class Enemy : PoolableObject, IDamageable
     public virtual void OnEnable()
     {
         SetupAgentFromConfiguration();
+        audioSource = gameObject.GetComponent<AudioSource>();
     }
 
     public override void OnDisable()
