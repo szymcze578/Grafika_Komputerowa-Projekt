@@ -29,6 +29,10 @@ public class UIShop : MonoBehaviour
 
 	public Player gracz;
 
+    private AudioSource audioSource;
+    public AudioClip BuyWeaponClip;
+    public AudioClip BuyAmmoClip;
+    public AudioClip OpenShopClip;
 
 	void Start()
 	{
@@ -43,6 +47,8 @@ public class UIShop : MonoBehaviour
 		shotgun.onClick.AddListener(buyShotgun);
         shotgunAmmo.onClick.AddListener(buyShotgunAmmo);
         assaultAmmo.onClick.AddListener(buyAssaultAmmo);
+
+        audioSource = gameObject.GetComponent<AudioSource>();
     }
 
 	void Update()
@@ -61,6 +67,7 @@ public class UIShop : MonoBehaviour
 				hudAlerts.text = "";
 				canvas.SetActive(true);
 				weaponSystem.blockShooting = false;
+                PlayOpenShopClip(audioSource);
 			}
 
 			if (canvas.activeSelf && Input.GetKeyDown(KeyCode.Escape))
@@ -90,6 +97,7 @@ public class UIShop : MonoBehaviour
 			gracz.points -= 30;
             shopAlerts.color = Color.green;
             shopAlerts.text = "You bought assault gun!";
+            PlayBuyWeaponClip(audioSource);
 
 		} else if(weaponSystem.weaponLock[1])
         {
@@ -114,6 +122,7 @@ public class UIShop : MonoBehaviour
 			gracz.points -= 15;
             shopAlerts.color = Color.green;
             shopAlerts.text = "You bought shotgun!";
+            PlayBuyWeaponClip(audioSource);
 		}
 		else if (weaponSystem.weaponLock[2])
 		{
@@ -138,6 +147,7 @@ public class UIShop : MonoBehaviour
             gracz.points -= 15;
             shopAlerts.color = Color.green;
             shopAlerts.text = "You bought ammo to shotgun!";
+            PlayBuyAmmoClip(audioSource);
         }
         else if(!weaponSystem.weaponLock[2])
         {
@@ -159,6 +169,7 @@ public class UIShop : MonoBehaviour
             gracz.points -= 25;
 			shopAlerts.color = Color.green;
             shopAlerts.text = "You bought ammo to assault!";
+            PlayBuyAmmoClip(audioSource);
         }
         else if (!weaponSystem.weaponLock[2])
         {
@@ -176,5 +187,23 @@ public class UIShop : MonoBehaviour
     void ResetShopAlerts()
     {
 		shopAlerts.text = "";
+    }
+
+    public void PlayBuyWeaponClip(AudioSource audioSource) {
+        if(BuyWeaponClip != null) {
+            audioSource.PlayOneShot(BuyWeaponClip);
+        }
+    }
+
+    public void PlayBuyAmmoClip(AudioSource audioSource) {
+        if(BuyAmmoClip != null) {
+            audioSource.PlayOneShot(BuyAmmoClip, 0.5f);
+        }
+    }
+
+    public void PlayOpenShopClip(AudioSource audioSource) {
+        if(OpenShopClip != null) {
+            audioSource.PlayOneShot(OpenShopClip);
+        }
     }
 }

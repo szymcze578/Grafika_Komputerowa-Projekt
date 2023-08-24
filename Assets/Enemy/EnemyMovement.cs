@@ -17,14 +17,29 @@ public class EnemyMovement : MonoBehaviour
 
     private Coroutine FollowCoroutine;
 
+
+    public float FootstepVolume;
+    public AudioClip[] FootstepClip;
+    private AudioSource audioSource;
+    public float StepsDelay;
+    private float timepassed;
+
     private void Awake()
     {
         Agent = GetComponent<NavMeshAgent>();
+        audioSource = gameObject.GetComponent<AudioSource>();
+        timepassed = 0f;
     }
 
     private void Update()
     {
         Animator.SetBool(isMoving, Agent.velocity.magnitude > 0.01f);
+
+        timepassed += Time.deltaTime;
+        if (Agent.velocity.magnitude > 0.01f && !audioSource.isPlaying && timepassed >= StepsDelay) {
+            PlayFootstepClip(audioSource);
+            timepassed = 0f;
+        }
     }
 
     public void StartChasing()
@@ -47,6 +62,12 @@ public class EnemyMovement : MonoBehaviour
             Agent.SetDestination(Target.transform.position - (Target.transform.position - transform.position).normalized * 0.5f);
 
             yield return Wait;
+        }
+    }
+
+    public void PlayFootstepClip(AudioSource audioSource) {
+        if(FootstepClip != null) {
+            audioSource.PlayOneShot(FootstepClip[Random.Range(0, FootstepClip.Length)], FootstepVolume);
         }
     }
 }

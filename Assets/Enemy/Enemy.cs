@@ -18,7 +18,7 @@ public class Enemy : PoolableObject, IDamageable
     public WeaponSystem weaponSystem = null;
     public WeaponAudioConfig audioConfig;
     private AudioSource audioSource;
-
+        
     public Player player;
 
     private void Awake()
@@ -31,7 +31,11 @@ public class Enemy : PoolableObject, IDamageable
     private void OnAttack(IDamageable Target)
     {
         Animator.SetTrigger(ATTACK_TRIGGER);
-        audioConfig.PlayShootingClip(audioSource);
+        
+        if(EnemyScriptableObject.IsRanged) {
+            audioConfig.PlayShootingClip(audioSource);
+        }
+        
 
         if (LookCoroutine != null)
         {

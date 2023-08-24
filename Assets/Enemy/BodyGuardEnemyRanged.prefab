@@ -90,6 +90,21 @@ MonoBehaviour:
   Target: {fileID: 0}
   UpdateSpeed: 0.1
   Animator: {fileID: 1805286911347837979}
+  FootstepVolume: 0.5
+  FootstepClip:
+  - {fileID: 8300000, guid: 59935683ec4f3df4ab39e35e011f0b2e, type: 3}
+  - {fileID: 8300000, guid: e20fa46f11b0a9d48807a06e338aead3, type: 3}
+  - {fileID: 8300000, guid: cb9ef6980e0a2234e97a54d2389800a4, type: 3}
+  - {fileID: 8300000, guid: d1e2fd2c771e53c4d937fbd1ae2cf64a, type: 3}
+  - {fileID: 8300000, guid: 69962a383251b784386813d07c3371f5, type: 3}
+  - {fileID: 8300000, guid: e7459a3bbed8dcf4db45d4e45f15b85e, type: 3}
+  - {fileID: 8300000, guid: bdeeb5f8c302d3f41bfd0ad5584760d8, type: 3}
+  - {fileID: 8300000, guid: cb9455ff7bacb3f4e886c6c5198b4771, type: 3}
+  - {fileID: 8300000, guid: cc294193438c6444bbc34f6ab0a3cfd7, type: 3}
+  - {fileID: 8300000, guid: 64c6b37f33b35d449b0eaea506d18afc, type: 3}
+  - {fileID: 8300000, guid: 739fedbfa10c67e4589737b2d2ca38a6, type: 3}
+  - {fileID: 8300000, guid: 69e96da2150c6b4499ea44688b49e624, type: 3}
+  StepsDelay: 0.35
 --- !u!114 &2881309852874395077
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -148,9 +163,9 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 500
+  MaxDistance: 5
   Pan2D: 0
-  rolloffMode: 0
+  rolloffMode: 1
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -183,7 +198,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 0.9
       inSlope: 0
       outSlope: 0
       tangentMode: 0

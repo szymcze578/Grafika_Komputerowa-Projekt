@@ -6,15 +6,26 @@ public class PlayerMoving : MonoBehaviour
 {
     public float MovementSpeed = 5f;
     public float rotationSpeed = 900f;
+
+    public float FootstepVolume;
+    public AudioClip[] FootstepClip;
+    private AudioSource audioSource;
+    public float StepsDelay;
+    private float timepassed;
+
     private Rigidbody rb;
     private Vector3 movement;
     private Animator anim;
+
 
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
+        audioSource = gameObject.GetComponent<AudioSource>();
+        audioSource.enabled = true;
+        timepassed = 0f;
     }
 
     // Update is called once per frame
@@ -39,6 +50,13 @@ public class PlayerMoving : MonoBehaviour
         }
 
         movement = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
+
+        timepassed += Time.deltaTime;
+        if (movement != Vector3.zero && !audioSource.isPlaying && timepassed >= StepsDelay) {
+            PlayFootstepClip(audioSource);
+            timepassed = 0f;
+        }
+
     }
 
     void FixedUpdate()
@@ -83,5 +101,11 @@ public class PlayerMoving : MonoBehaviour
         // update the animator parameters
         animator.SetFloat("vertical", verticalMagnitude);
         animator.SetFloat("horizontal", horizontalMagnitude);
+    }
+
+    public void PlayFootstepClip(AudioSource audioSource) {
+        if(FootstepClip != null) {
+            audioSource.PlayOneShot(FootstepClip[Random.Range(0, FootstepClip.Length)], FootstepVolume);
+        }
     }
 }
