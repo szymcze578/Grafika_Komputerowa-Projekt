@@ -1,14 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Numerics;
 using UnityEngine;
 
 public class MolotovExplosion : MonoBehaviour
 {
-    public float damagePerSecond;
-    public float burningTime;
-    public float burningSize;
     private Rigidbody rb;
     private CapsuleCollider cc;
+
+    public GameObject fireEffect;
+    public AudioClip explosionClip;
+
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -28,7 +31,8 @@ public class MolotovExplosion : MonoBehaviour
 
     private void Explode()
     {
-        //fire effect
-        //rb.detectCollisions = false;
+        rb.detectCollisions = false;
+        Instantiate(fireEffect, transform.position, fireEffect.transform.rotation);
+        Destroy(gameObject);
     }
 }

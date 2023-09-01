@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Molotov
   m_EditorClassIdentifier: 
   Volume: 0.4
-  ShootingClip: []
+  ShootingClip:
+  - {fileID: 8300000, guid: 0d6f47e373f2c8a49b05d4770fda58cc, type: 3}
   ReloadingClip: {fileID: 8300000, guid: a1103ffbab4cfc349b6e229d92efa5de, type: 3}
   EmptyClip: {fileID: 8300000, guid: a1103ffbab4cfc349b6e229d92efa5de, type: 3}
   EquipGun: {fileID: 8300000, guid: 75a2c0789aeaf84478866b52b46203d7, type: 3}
