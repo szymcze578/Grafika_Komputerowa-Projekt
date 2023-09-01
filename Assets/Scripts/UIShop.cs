@@ -24,6 +24,8 @@ public class UIShop : MonoBehaviour
     public GameObject shotgunAmmoButton;
     public GameObject assaultAmmoButton;
 
+    public GameObject molotovButton;
+
     public bool wave = false;
 	bool shopActive;
 
@@ -41,12 +43,14 @@ public class UIShop : MonoBehaviour
         Button assault = assaultButton.GetComponent<Button>();
         Button shotgunAmmo = shotgunAmmoButton.GetComponent<Button>();
         Button assaultAmmo = assaultAmmoButton.GetComponent<Button>();
+        Button molotov = molotovButton.GetComponent<Button>();
 
         gracz = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         assault.onClick.AddListener(buyAssault);
 		shotgun.onClick.AddListener(buyShotgun);
         shotgunAmmo.onClick.AddListener(buyShotgunAmmo);
         assaultAmmo.onClick.AddListener(buyAssaultAmmo);
+        molotov.onClick.AddListener(buyMolotov);
 
         audioSource = gameObject.GetComponent<AudioSource>();
     }
@@ -179,6 +183,23 @@ public class UIShop : MonoBehaviour
         else if (gracz.points < 25)
         {
 			shopAlerts.color = Color.red;
+            shopAlerts.text = "You don't have enough money!";
+        }
+    }
+
+    void buyMolotov()
+    {
+        if (gracz.points >= 50)
+        {
+            weaponSystem.bulletsLeft[3] += 2;
+            gracz.points -= 50;
+            shopAlerts.color = Color.green;
+            shopAlerts.text = "You bought two molotovs!";
+            PlayBuyAmmoClip(audioSource);
+        } 
+        else if (gracz.points < 50)
+        {
+            shopAlerts.color = Color.red;
             shopAlerts.text = "You don't have enough money!";
         }
     }

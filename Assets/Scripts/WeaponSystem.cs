@@ -38,6 +38,7 @@ public class WeaponSystem : MonoBehaviour
     public int selectedWeapon = 1; 
     public bool[] weaponLock = { true, false, false, true };
 
+
     public int[] magazinesLeft = { 999, 0, 0, 0 };
 
     public float bulletSpeed = 0.25f;
@@ -47,7 +48,7 @@ public class WeaponSystem : MonoBehaviour
     public int magazineSize, bulletsPerTab;
     public bool allowButtonHold;
 
-    int[] bulletsLeft = { 10, 30, 15, 3 };
+    public int[] bulletsLeft = { 10, 30, 15, 0 };
     int bulletsShot, damage;
     bool shooting, reloading, readyToShoot;
     public bool blockShooting = false;
@@ -371,14 +372,17 @@ public class WeaponSystem : MonoBehaviour
         if (selectedWeapon == 1)
             magazinesLeftUI.text = "∞";
         else if (selectedWeapon == 4)
-            magazinesLeftUI.text = "3";
+            magazinesLeftUI.text = "";
         else
             if(magazinesLeft[selectedWeapon - 1] > 5)
                 magazinesLeftUI.text = "+" + string.Concat(Enumerable.Repeat("X", 5));
             else
                 magazinesLeftUI.text = string.Concat(Enumerable.Repeat("X", magazinesLeft[selectedWeapon - 1]));
 
-        ammoDisplay.text = bulletsLeft[selectedWeapon - 1] + "/" + magazineSize;
+        if (selectedWeapon == 4)
+            ammoDisplay.text = bulletsLeft[selectedWeapon - 1].ToString();
+        else
+            ammoDisplay.text = bulletsLeft[selectedWeapon - 1] + "/" + magazineSize;
         ammoAnimation.text = string.Concat(Enumerable.Repeat("I", bulletsLeft[selectedWeapon - 1]));
 
         
