@@ -90,4 +90,14 @@ public class AttackRadius : MonoBehaviour
     {
         return Damageable != null && !Damageable.GetTransform().gameObject.activeSelf;
     }
+
+    public virtual void OnDisable()
+    {
+        if(AttackCoroutine != null)
+        {
+            StopCoroutine(AttackCoroutine);
+            AttackCoroutine = null;
+        }
+        Damagesables.Clear();
+    }
 }

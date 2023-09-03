@@ -15,7 +15,7 @@ public class EnemyMovement : MonoBehaviour
 
     private const string isMoving = "isMoving";
 
-    private Coroutine FollowCoroutine;
+    public Coroutine FollowCoroutine;
 
 
     public float FootstepVolume;

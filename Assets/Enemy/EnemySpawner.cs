@@ -5,34 +5,69 @@ using UnityEngine.AI;
 
 public class EnemySpawner : MonoBehaviour
 {
+    private UIShop Shop;
     public Transform Player;
     public int NumberOfEnemiesToSpawn = 5;
     public float SpawnDelay = 1f;
-    public List<Enemy> EnemyPrefabs = new List<Enemy>();
+    //public List<Enemy> EnemyPrefabs = new List<Enemy>();
+    public List<EnemyScriptableObject> Enemies = new List<EnemyScriptableObject>();
     public SpawnMethod EnemySpawnMethod = SpawnMethod.RoundRobin;
+    public bool ContinousSpawning;
+    public ScalingScriptableObject Scaling;
+    [Space]
+    [Header("Read At Runtime")]
+    [SerializeField]
+    private int Level = 0;
+    [SerializeField]
+    private List<EnemyScriptableObject> ScaledEnemies = new List<EnemyScriptableObject>();
+    [SerializeField]
+    private int LimitLevel = 1;
+    [SerializeField]
+    private float RestTime = 30;
+
+    private int EnemiesAlive = 0;
+    private int SpawnedEnemies = 0;
+    private int InitialEnemiesToSpawn;
+    private float InitialSpawnDelay;
 
     private NavMeshTriangulation Triangulation;
     private Dictionary<int, ObjectPool> EnemyObjectPools = new Dictionary<int, ObjectPool>();
 
     private void Awake()
     {
-        for(int i = 0; i < EnemyPrefabs.Count; i++)
+        for(int i = 0; i < Enemies.Count; i++)
         {
-            EnemyObjectPools.Add(i, ObjectPool.CreateInstance(EnemyPrefabs[i], NumberOfEnemiesToSpawn));
+            EnemyObjectPools.Add(i, ObjectPool.CreateInstance(Enemies[i].Prefab, NumberOfEnemiesToSpawn));
         }
+        InitialEnemiesToSpawn = NumberOfEnemiesToSpawn;
+        InitialSpawnDelay = SpawnDelay;
     }
 
     private void Start()
     {
+        Shop = GameObject.Find("chair (6)").GetComponent<UIShop>();
         Triangulation = NavMesh.CalculateTriangulation();
+        for(int i = 0; i < Enemies.Count; i++)
+        {
+            ScaledEnemies.Add(Enemies[i].scaleUpForLevel(Scaling, Level));
+        }
         StartCoroutine(SpawnEnemies());
     }
 
     private IEnumerator SpawnEnemies()
     {
+        Shop.wave = true;
+        Level++;
+        SpawnedEnemies = 0;
+        EnemiesAlive = 0;
+
+        for (int i = 0; i < Enemies.Count; i++)
+        {
+            ScaledEnemies[i] = Enemies[i].scaleUpForLevel(Scaling, Level);
+        }
+
         WaitForSeconds Wait = new WaitForSeconds(SpawnDelay);
 
-        int SpawnedEnemies = 0;
 
         while(SpawnedEnemies < NumberOfEnemiesToSpawn)
         {
@@ -47,18 +82,24 @@ public class EnemySpawner : MonoBehaviour
             SpawnedEnemies++;
             yield return Wait;
         }
+
+        if(ContinousSpawning)
+        {
+            ScaleUpSpawns();
+            StartCoroutine(SpawnEnemies());
+        }
     }
 
     private void SpawnRoundRobinEnemy(int SpawnedEnemies)
     {
-        int SpawnIndex = SpawnedEnemies % EnemyPrefabs.Count;
+        int SpawnIndex = SpawnedEnemies % Enemies.Count;
 
         DoSpawnEnemy(SpawnIndex);
     }
 
     private void SpawnRandomEnemy()
     {
-        DoSpawnEnemy(Random.Range(0, EnemyPrefabs.Count));
+        DoSpawnEnemy(Random.Range(0, Enemies.Count));
     }
 
     private void DoSpawnEnemy(int SpawnIndex)
@@ -68,6 +109,7 @@ public class EnemySpawner : MonoBehaviour
         if (poolableObject != null)
         {
             Enemy enemy = poolableObject.GetComponent<Enemy>();
+            ScaledEnemies[SpawnIndex].SetupEnemy(enemy);
 
             int VertexIndex = Random.Range(0, Triangulation.vertices.Length);
 
@@ -78,6 +120,9 @@ public class EnemySpawner : MonoBehaviour
                 enemy.Movement.Target = Player;
                 enemy.Agent.enabled = true;
                 enemy.Movement.StartChasing();
+                enemy.OnDie += HandleEnemyDeath;
+
+                EnemiesAlive++;
             }
             else
             {
@@ -89,6 +134,32 @@ public class EnemySpawner : MonoBehaviour
             Debug.LogError($"Nie mozna pobrac przeciwnika typu {SpawnIndex} z puli obiektow.");
         }
     }
+
+
+    private void ScaleUpSpawns()
+    {
+        NumberOfEnemiesToSpawn = Mathf.FloorToInt(InitialEnemiesToSpawn * Scaling.SpawnCountCurve.Evaluate(Level + 1));
+        SpawnDelay = InitialSpawnDelay * Scaling.SpawnRateCurve.Evaluate(Level + 1);
+    }
+
+    private void HandleEnemyDeath(Enemy enemy)
+    {
+        EnemiesAlive--;
+
+        if ( EnemiesAlive == 0 && SpawnedEnemies == NumberOfEnemiesToSpawn && Level != LimitLevel)
+        {
+            StartCoroutine(DoNextRound());
+        }
+    }
+
+    private IEnumerator DoNextRound()
+    {
+        Shop.wave = false;
+        yield return new WaitForSeconds(RestTime);
+        ScaleUpSpawns();
+        StartCoroutine(SpawnEnemies());
+    }
+
     public enum SpawnMethod 
     { 
         RoundRobin,

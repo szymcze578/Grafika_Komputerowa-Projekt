@@ -30,8 +30,10 @@ public class Player : MonoBehaviour, IDamageable
             gameObject.SetActive(false);
         }
         healthBar.SetHealth(Health);
-        StartCoroutine(dissapearBloodEffect());
-        
+        if (Health >= 0)
+        {
+            StartCoroutine(dissapearBloodEffect());
+        }
     }
     public bool increaseHealth(int amount)
     {

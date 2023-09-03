@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.17276807, g: 0.21589197, b: 0.29782572, a: 1}
+  m_IndirectSpecularColor: {r: 0.172768, g: 0.21589169, b: 0.29782546, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -4884,12 +4884,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Player: {fileID: 409952839}
-  NumberOfEnemiesToSpawn: 5
+  NumberOfEnemiesToSpawn: 1
   SpawnDelay: 1
-  EnemyPrefabs:
-  - {fileID: 2881309852874395077, guid: b2bee4a16b34b024ba7c1b70cde53b62, type: 3}
-  - {fileID: 431663614516757732, guid: aca4ed6a7d7cbd542abee92b9beb525a, type: 3}
+  Enemies:
+  - {fileID: 11400000, guid: 5dad77873a58e084eaa69f51b5e207f7, type: 2}
+  - {fileID: 11400000, guid: cfd3eaa1d37d1044892eb428f4639efe, type: 2}
   EnemySpawnMethod: 0
+  ContinousSpawning: 0
+  Scaling: {fileID: 11400000, guid: 2ab088be790eb7d4bbd93e9875b2b86c, type: 2}
+  Level: 0
+  ScaledEnemies: []
+  LimitLevel: 2
+  RestTime: 10
 --- !u!4 &884256711
 Transform:
   m_ObjectHideFlags: 0
@@ -9695,7 +9701,7 @@ MonoBehaviour:
   selectedWeapon: 1
   weaponLock: 01000000
   magazinesLeft: e7030000000000000000000000000000
-  bulletSpeed: 10
+  bulletSpeed: 200
   timeBetweenShoting: 0
   reloadTime: 0
   timeBetweenShots: 0

@@ -11,6 +11,8 @@ public class Enemy : PoolableObject, IDamageable
     public NavMeshAgent Agent;
     public EnemyScriptableObject EnemyScriptableObject;
     public int Health = 100;
+    public delegate void DeathEvent(Enemy enemy);
+    public DeathEvent OnDie;
 
     private Coroutine LookCoroutine;
     private const string ATTACK_TRIGGER = "Attack";
@@ -69,9 +71,15 @@ public class Enemy : PoolableObject, IDamageable
 
     public override void OnDisable()
     {
+        if(Movement.FollowCoroutine != null)
+        {
+            StopCoroutine(Movement.FollowCoroutine);
+            Movement.FollowCoroutine = null;
+        }
         base.OnDisable();
 
         Agent.enabled = false;
+        OnDie = null;
     }
 
     public virtual void SetupAgentFromConfiguration()
@@ -108,6 +116,7 @@ public class Enemy : PoolableObject, IDamageable
         if (Health <= 0)
         {
             player.points += 10;
+            OnDie?.Invoke(this);
             gameObject.SetActive(false);
         }
     }
