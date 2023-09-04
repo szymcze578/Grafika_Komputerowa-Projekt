@@ -10,7 +10,7 @@ public class UIShop : MonoBehaviour
 
 	public GameObject shop;
 
-	public Text shopAlerts;
+    public Text shopAlerts;
 	public Text hudAlerts;
 
 	public int gunInShop;
@@ -107,12 +107,14 @@ public class UIShop : MonoBehaviour
         {
             shopAlerts.color = Color.red;
             shopAlerts.text = "You already bought this weapon!";
-			
-		} else if (gracz.points < 30)
+
+
+        } else if (gracz.points < 30)
         {
             shopAlerts.color = Color.red;
             shopAlerts.text = "You don't have enough money!";
-		}
+
+        }
 		Invoke("ResetShopAlerts", 2.0f);
 
 	}
@@ -125,6 +127,7 @@ public class UIShop : MonoBehaviour
 			weaponSystem.magazinesLeft[2] = 1;
 			gracz.points -= 15;
             shopAlerts.color = Color.green;
+
             shopAlerts.text = "You bought shotgun!";
             PlayBuyWeaponClip(audioSource);
 		}
@@ -163,6 +166,8 @@ public class UIShop : MonoBehaviour
             shopAlerts.color = Color.red;
             shopAlerts.text = "You don't have enough money!";
         }
+
+        Invoke("ResetShopAlerts", 2.0f);
     }
 
     void buyAssaultAmmo()
@@ -185,6 +190,8 @@ public class UIShop : MonoBehaviour
 			shopAlerts.color = Color.red;
             shopAlerts.text = "You don't have enough money!";
         }
+
+        Invoke("ResetShopAlerts", 2.0f);
     }
 
     void buyMolotov()
@@ -202,12 +209,14 @@ public class UIShop : MonoBehaviour
             shopAlerts.color = Color.red;
             shopAlerts.text = "You don't have enough money!";
         }
+
+        Invoke("ResetShopAlerts", 2.0f);
     }
 
 
     void ResetShopAlerts()
     {
-		shopAlerts.text = "";
+        shopAlerts.text = "";
     }
 
     public void PlayBuyWeaponClip(AudioSource audioSource) {

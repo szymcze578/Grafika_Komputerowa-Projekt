@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour, IDamageable
 {
@@ -12,12 +13,14 @@ public class Player : MonoBehaviour, IDamageable
     public HealthBar healthBar;
 
     public Image bloodEffect;
+    public Image gameOverScreen;
     public float fadeSpeed = 0.5f;
 
 
     public void Awake()
     {
         bloodEffect.color = new Color(bloodEffect.color.r, bloodEffect.color.g, bloodEffect.color.b, 0);
+        gameOverScreen.gameObject.SetActive(false);
     }
 
     public void TakeDamage(int Damage)
@@ -28,6 +31,7 @@ public class Player : MonoBehaviour, IDamageable
         if (Health <= 0)
         {
             gameObject.SetActive(false);
+            gameOverScreen.gameObject.SetActive(true);
         }
         healthBar.SetHealth(Health);
         if (Health >= 0)
@@ -66,5 +70,15 @@ public class Player : MonoBehaviour, IDamageable
         }
 
         yield return null;
+    }
+
+    public void playAgain()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void returnToMainMenu()
+    {
+        SceneManager.LoadScene(0);
     }
 }
