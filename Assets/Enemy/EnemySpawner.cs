@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class EnemySpawner : MonoBehaviour
 {
@@ -32,6 +33,10 @@ public class EnemySpawner : MonoBehaviour
 
     private NavMeshTriangulation Triangulation;
     private Dictionary<int, ObjectPool> EnemyObjectPools = new Dictionary<int, ObjectPool>();
+
+    public Text EnemiesLeftText;
+    public Text RestTimeText;
+    public Text WaveAlerts;
 
     private void Awake()
     {
@@ -165,4 +170,55 @@ public class EnemySpawner : MonoBehaviour
         RoundRobin,
         Random
     }
+
+    /* TODO */
+    // pokazuje ilosc przeciwnikow
+    public void SetEnemiesLeftText(int enemies)
+    {
+        if (enemies > 0)
+        {
+            EnemiesLeftText.text = "Enemies left: " + enemies.ToString();
+        }
+        else
+        {
+            EnemiesLeftText.text = "Enemies left: --";
+        }
+
+    }
+
+
+    // timer przerwy miedzy falami
+    // wywolanie -> StartCoroutine(SetRestTimer(RestTime));
+    public IEnumerator SetRestTimer(float RestTime)
+    {
+
+        for (float i = RestTime; i >= 0; i -= Time.deltaTime)
+        {
+            RestTimeText.text = "Rest time: " + Mathf.RoundToInt(i).ToString() + " s";
+            if(Mathf.RoundToInt(i) == 0)
+            {
+                RestTimeText.text = "Rest time: -- ";
+            }
+            yield return null;
+        }
+
+        yield return null;
+    }
+
+    // info o rozpoczeciu/zakonczeniu fali
+    // wywolanie -> StartCoroutine(WaveAlertsTextBlink("Wave has started!"));
+    public IEnumerator WaveAlertsTextBlink(string WaveAlertsText)
+    {
+        int i = 0;
+        while (i < 3)
+        {
+            WaveAlerts.text = WaveAlertsText;
+            yield return new WaitForSeconds(.5f);
+            WaveAlerts.text = "";
+            yield return new WaitForSeconds(.5f);
+            i++;
+        }
+
+    }
+
 }

@@ -17,6 +17,7 @@ public class Player : MonoBehaviour, IDamageable
     public float fadeSpeed = 0.5f;
 
 
+
     public void Awake()
     {
         bloodEffect.color = new Color(bloodEffect.color.r, bloodEffect.color.g, bloodEffect.color.b, 0);
@@ -25,6 +26,11 @@ public class Player : MonoBehaviour, IDamageable
 
     public void TakeDamage(int Damage)
     {
+        if (Health >= 0)
+        {
+            StartCoroutine(dissapearBloodEffect());
+        }
+
         Health -= Damage;
         bloodEffect.color = new Color(bloodEffect.color.r, bloodEffect.color.g, bloodEffect.color.b, 255);
 
@@ -34,10 +40,6 @@ public class Player : MonoBehaviour, IDamageable
             gameOverScreen.gameObject.SetActive(true);
         }
         healthBar.SetHealth(Health);
-        if (Health >= 0)
-        {
-            StartCoroutine(dissapearBloodEffect());
-        }
     }
     public bool increaseHealth(int amount)
     {
