@@ -16,12 +16,13 @@ public class Player : MonoBehaviour, IDamageable
     public Image gameOverScreen;
     public float fadeSpeed = 0.5f;
 
-
+    public AudioSource musicManager;
 
     public void Awake()
     {
         bloodEffect.color = new Color(bloodEffect.color.r, bloodEffect.color.g, bloodEffect.color.b, 0);
         gameOverScreen.gameObject.SetActive(false);
+        musicManager.enabled = true;
     }
 
     public void TakeDamage(int Damage)
@@ -38,6 +39,8 @@ public class Player : MonoBehaviour, IDamageable
         {
             gameObject.SetActive(false);
             gameOverScreen.gameObject.SetActive(true);
+            musicManager.enabled = false;
+
         }
         healthBar.SetHealth(Health);
     }
