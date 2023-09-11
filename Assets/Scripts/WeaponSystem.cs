@@ -124,7 +124,7 @@ public class WeaponSystem : MonoBehaviour
             Throw();
         }
 
-        if (blockShooting && readyToShoot && shooting && !reloading && bulletsLeft[selectedWeapon - 1] <= 0)
+        if (blockShooting && readyToShoot && Input.GetKeyDown(KeyCode.Mouse0) && !reloading && bulletsLeft[selectedWeapon - 1] <= 0)
         {
             audioConfig[selectedWeapon-1].PlayOutOfAmmoClip(audioSource);
         }

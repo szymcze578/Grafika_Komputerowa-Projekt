@@ -9,10 +9,11 @@ public class LightFlickering : MonoBehaviour
 
     public float minTime;
     public float maxTime;
-
+    public float delay;
+    private bool ready = false;
     void Start()
     {
-        StartCoroutine(Flickering());
+        Invoke("Run", delay);
     }
 
     IEnumerator Flickering()
@@ -21,8 +22,12 @@ public class LightFlickering : MonoBehaviour
             yield return new WaitForSeconds(UnityEngine.Random.Range(minTime, maxTime));
             foreach(Light light in Lights) {
                  light.enabled = !light.enabled;
-                 Console.Write("flick");
             }               
         }
     }
+
+    void Run()
+    {
+        StartCoroutine(Flickering());
+    }   
 }
