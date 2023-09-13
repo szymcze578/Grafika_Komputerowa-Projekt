@@ -6,28 +6,35 @@ using UnityEngine;
 [RequireComponent(typeof(AudioSource))]
 public class SimpleCollectibleScript : MonoBehaviour {
 
-	public enum CollectibleTypes {NoType, Type1, Type2, Type3, Type4, Type5}; // you can replace this with your own labels for the types of collectibles in your game!
+	// Enum określający typy przedmiotów do zebrania
+	public enum CollectibleTypes {NoType, Type1, Type2, Type3, Type4, Type5};
 
+	// Zmienna określająca typ przedmiotu do zebrania.
 	public CollectibleTypes CollectibleType; // this gameObject's type
 
-	public bool rotate; // do you want it to rotate?
+	// Zmienna określająca czy przedmiot do zebrania ma się obracać
+	public bool rotate;
 
+	// Prędkość obrotu
 	public float rotationSpeed;
 
+	// Dźwięk obrotu
 	public AudioClip collectSound;
 
+	// 
 	public GameObject collectEffect;
 
+	// Wskaźnik na obiekt gracza
 	public Player player;
-	public WeaponSystem weaponSystem;
 
-	// Use this for initialization
+    // Wskaźnik do skryptu weaponSystem
+    public WeaponSystem weaponSystem;
+
 	void Start () {
 		player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
 		weaponSystem = GameObject.Find("GunHolder").GetComponent<WeaponSystem>();
     }
 	
-	// Update is called once per frame
 	void Update () {
         if (rotate)
 			transform.Rotate (Vector3.up * rotationSpeed * Time.deltaTime, Space.World);
@@ -40,6 +47,7 @@ public class SimpleCollectibleScript : MonoBehaviour {
 		}
 	}
 
+	// Funkcja wywoływana gdy zajedzie kolizja gracza z przedmiotem do podniesienia znajdującym się na mapie. W zależności od typu przedmiotu zostanie wykonana inna akcja.
 	public void Collect()
 	{
 		if(collectSound)
