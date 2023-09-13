@@ -62,7 +62,7 @@ public class WeaponSystem : MonoBehaviour
     /*
      * Zmienna tablicowa okreslajaca, ktore bronie sa odblokowane dla gracza
      */
-    public bool[] weaponLock = { true, false, false, true };
+    public bool[] weaponLock = { true, false, false, false };
 
     /*
      * Zmienna tablicowa okreslajaca liczbe pozostalych magazynkow dla kazdej broni
@@ -109,7 +109,7 @@ public class WeaponSystem : MonoBehaviour
     /*
      * Zmienna tablicowa okreslajaca liczbe pozostalych kul w magazynku
      */
-    public int[] bulletsLeft = { 10, 30, 15, 0 };
+    public int[] bulletsLeft = { 10, 30, 15, 2 };
 
     /*
      * Zmienna okreslajaca ile kul zostalo juz wystrzelonych po wcisnieciu LPM
@@ -145,12 +145,20 @@ public class WeaponSystem : MonoBehaviour
     private int previousWeapon;
     private bool readyToThrow;
 
+    [SerializeField]
+    private LineRenderer lineRenderer;
+
+
+    private int LinePoints = 25;
+    private float TimeBetweenPoints = 0.1f;
+
     [Header("Molotov")]
     public GameObject objectToThrow;
-    public float throwForce;
+    private float throwForce;
     public float throwUpwardForce;
 
     Player player;
+    
 
 
     void Start()
@@ -167,6 +175,15 @@ public class WeaponSystem : MonoBehaviour
         MyInput();
         SetUpHud();
         pointsDisplay.text = player.points.ToString();
+
+        if(selectedWeapon == 4 && readyToThrow) {
+            CalculateThrowForce();
+            DrawProjection();
+        }   
+        else {
+            lineRenderer.enabled = false;
+        }
+    
     }
 
     /*
@@ -230,6 +247,35 @@ public class WeaponSystem : MonoBehaviour
         audioConfig[selectedWeapon-1].PlayReloadingClip(audioSource);
     }
 
+    private void CalculateThrowForce()
+    {
+        Vector3 center = Vector3.zero;
+        center.x += Screen.width/2;
+        center.y += Screen.height/2;
+        Vector3 mousePos = Input.mousePosition - center;
+        throwForce = mousePos.magnitude / 55;
+        //throwUpwardForce = 5;
+    }
+    private void DrawProjection()
+    {
+        lineRenderer.enabled = true;
+        lineRenderer.positionCount = Mathf.CeilToInt(LinePoints / TimeBetweenPoints) + 1;
+
+        Vector3 startPosition = transform.GetChild(3).transform.position;
+        Vector3 startVelocity = (throwForce*transform.root.forward + transform.root.up * (throwUpwardForce+1)) / objectToThrow.GetComponent<Rigidbody>().mass;
+
+        int i = 0;
+        lineRenderer.SetPosition(i, startPosition);
+        for(float time = 0; time < LinePoints; time += TimeBetweenPoints)
+        {
+            i++;
+            Vector3 point = startPosition + time * startVelocity;
+            point.y = startPosition.y + startVelocity.y * time + (Physics.gravity.y / 2f * time * time);
+            lineRenderer.SetPosition(i, point);
+        }
+
+    }
+
     private void Throw()
     {
         readyToThrow = false;
@@ -247,7 +293,7 @@ public class WeaponSystem : MonoBehaviour
     {
         GameObject projectile = Instantiate(objectToThrow, transform.GetChild(3).transform.position,  transform.GetChild(3).transform.rotation);
         Rigidbody projectileRb = projectile.GetComponent<Rigidbody>();
-        Vector3 forceToAdd = bulletSpawnPoint.transform.right * throwForce;
+        Vector3 forceToAdd = transform.root.forward * throwForce + transform.root.up * throwUpwardForce;
         projectileRb.AddForce(forceToAdd, ForceMode.Impulse);
 
         transform.GetChild(selectedWeapon-1).gameObject.SetActive(false);
@@ -403,6 +449,7 @@ public class WeaponSystem : MonoBehaviour
                 reloadTime = 2f; // 3s / 2 = 1.5s
                 throwingStance = false;
                 readyToThrow = false;
+                Cursor.visible = true;
                 break;
 
             case 2:
@@ -421,6 +468,7 @@ public class WeaponSystem : MonoBehaviour
                 reloadTime = 1f; // 3s / 1
                 throwingStance = false;
                 readyToThrow = false;
+                Cursor.visible = true;
                 break;
 
             case 3:
@@ -438,6 +486,7 @@ public class WeaponSystem : MonoBehaviour
                 reloadTime = 0.7f; // 3s / 0.7
                 throwingStance = false;
                 readyToThrow = false;
+                Cursor.visible = true;
                 break;
 
             case 4:
@@ -455,6 +504,7 @@ public class WeaponSystem : MonoBehaviour
                 reloadTime = 0.7f; // 3s / 0.7
                 throwingStance = true;
                 readyToShoot = false;
+                Cursor.visible = false;
                 break;
         }
 
