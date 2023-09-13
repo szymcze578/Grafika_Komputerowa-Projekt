@@ -6,8 +6,10 @@ using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour, IDamageable
 {
+    //punkty ¿ycia gracza
     [SerializeField]
     private int Health = 100;
+    //punkty(pieni¹dz) które gracz zdobywa podczas rozgrzewki 
     public int points = 0;
 
     public HealthBar healthBar;
@@ -25,6 +27,8 @@ public class Player : MonoBehaviour, IDamageable
         musicManager.enabled = true;
     }
 
+    // Funkcja aktualizuj¹ca punkty ¿ycia gracza po otwymaniu obra¿eñ
+    // Damage - iloœæ otrzymanych obra¿eñ
     public void TakeDamage(int Damage)
     {
         if (Health >= 0)
@@ -44,6 +48,9 @@ public class Player : MonoBehaviour, IDamageable
         }
         healthBar.SetHealth(Health);
     }
+
+    // Funkcja zwiêkszaj¹ca ¿ycie gracza po kontakcie z odpowienim przedmiotem znajduj¹cym siê na mapie
+    // amount - iloœæ ¿ycia do zwiêkszenia
     public bool increaseHealth(int amount)
     {
         if(Health == 100) {
