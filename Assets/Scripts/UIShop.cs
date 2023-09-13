@@ -6,37 +6,85 @@ using System;
 
 public class UIShop : MonoBehaviour
 {
-	public WeaponSystem weaponSystem;
+    /*
+     * Wskaznik do skryptu weaponSystem
+     */
+    public WeaponSystem weaponSystem;
 
-	public GameObject shop;
+    /*
+     * Obiekt na mapie stanowiacy sklep
+     */
+    public GameObject shop;
 
+    /*
+     * Pole tekstowe z komunikatami sklepu 
+     */
     public Text shopAlerts;
-	public Text hudAlerts;
 
-	public int gunInShop;
+    /*
+     * Pole tekstowe z komunikatami interfejsu uzytkownika
+     */
+    public Text hudAlerts;
 
-	public GameObject player;
+    /*
+     * Wskaznik do obiektu gracza na scenie
+     */
+    public GameObject player;
 
-	public GameObject canvas;
-	public GameObject assaultButton;
-	public GameObject shotgunButton;
+    /*
+     * Okno sklepu w interfejsie uzytkownika
+     */
+    public GameObject canvas;
 
+    /*
+     * Przycisk do zakupu karabinu
+     */
+    public GameObject assaultButton;
+
+    /*
+     * Przycisk do zakupu strzelby
+     */
+    public GameObject shotgunButton;
+
+    /*
+     * Przycisk do zakupu amunicji do strzelby
+     */
     public GameObject shotgunAmmoButton;
+
+    /*
+     * Przycisk do zakupu amunicji do karabinu
+     */
     public GameObject assaultAmmoButton;
 
+    /*
+     * Przycisk do zakupu amunicji granatu zapalajacego
+     */
     public GameObject molotovButton;
 
+    /*
+     * Zmienna informujaca czy fala przeciwnikow jest aktywna
+     */
     public bool wave = false;
-	bool shopActive;
 
-	public Player gracz;
+    /*
+     * Zmienna informujaca czy okno sklepu jest aktywne
+     */
+    bool shopActive;
+
+    /*
+     * Wskaznik do skryptu gracza
+     */
+    public Player gracz;
 
     private AudioSource audioSource;
     public AudioClip BuyWeaponClip;
     public AudioClip BuyAmmoClip;
     public AudioClip OpenShopClip;
 
-	void Start()
+    /*
+     * Funkcja inicjalizujaca sklep - ustawia odpowiednie zmienne, oraz dezaktywuje okno sklepu w interfejsie uzytkownika
+     */
+    void Start()
 	{
 		canvas.SetActive(false);
         Button shotgun = shotgunButton.GetComponent<Button>();
@@ -55,7 +103,10 @@ public class UIShop : MonoBehaviour
         audioSource = gameObject.GetComponent<AudioSource>();
     }
 
-	void Update()
+    /*
+     * Funkcja, ktora sprawdza odleglosc gracza od sklepu i aktywuje interakcje
+     */
+    void Update()
     {
 		float distance = Vector3.Distance(player.transform.position, shop.transform.position);
 		//Debug.Log(gunInShop + " " + distance);
@@ -92,7 +143,10 @@ public class UIShop : MonoBehaviour
 
     }
 
-	void buyAssault()
+    /*
+     * Funkcja sluzaca do zakupu karabinu w sklepie
+     */
+    void buyAssault()
 	{
 		if(!weaponSystem.weaponLock[1] && gracz.points >= 30)
         {
@@ -119,7 +173,10 @@ public class UIShop : MonoBehaviour
 
 	}
 
-	void buyShotgun()
+    /*
+     * Funkcja sluzaca do zakupu strzelby w sklepie
+     */
+    void buyShotgun()
 	{
 		if (!weaponSystem.weaponLock[2] && gracz.points >= 15)
 		{
@@ -146,6 +203,9 @@ public class UIShop : MonoBehaviour
 
 	}
 
+    /*
+     * Funkcja sluzaca do zakupu amunicji do strzelby w sklepie
+     */
     void buyShotgunAmmo()
     {
         if (weaponSystem.weaponLock[2] && gracz.points >= 15)
@@ -170,6 +230,9 @@ public class UIShop : MonoBehaviour
         Invoke("ResetShopAlerts", 2.0f);
     }
 
+    /*
+     * Funkcja sluzaca do zakupu amunicji do karabinu w sklepie
+     */
     void buyAssaultAmmo()
     {
         if (weaponSystem.weaponLock[1] && gracz.points >= 25)
@@ -194,6 +257,9 @@ public class UIShop : MonoBehaviour
         Invoke("ResetShopAlerts", 2.0f);
     }
 
+    /*
+     * Funkcja sluzaca do zakupu granata zapalajacego w sklepie
+     */
     void buyMolotov()
     {
         if (gracz.points >= 50)
@@ -213,7 +279,9 @@ public class UIShop : MonoBehaviour
         Invoke("ResetShopAlerts", 2.0f);
     }
 
-
+    /*
+     * Funkcja resetujaca pole tekstowe z komunikatami
+     */
     void ResetShopAlerts()
     {
         shopAlerts.text = "";

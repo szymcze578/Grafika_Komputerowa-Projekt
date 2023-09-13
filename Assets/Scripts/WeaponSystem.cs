@@ -28,29 +28,117 @@ public class WeaponSystem : MonoBehaviour
     public WeaponAudioConfig[] audioConfig;
     private AudioSource audioSource;
 
+    /*
+     * Pole tekstowe wyswietlajace aktualny stan amunicji
+     */
     public Text ammoDisplay;
+
+    /*
+     * Pole tekstowe wyswietlajace aktualny stan amunicji
+     */
     public Text ammoAnimation;
+
+    /*
+     * Pole tekstowe wyswietlajace punkty gracza
+     */
     public Text pointsDisplay;
+
+    /*
+     * Pole tekstowe wyswietlajace informacje w interfejsie uzytkownika
+     */
     public Text hudInfo;
+
+    /*
+     * Pole tekstowe wyswietlajace liczbe posiadanych magazynkow z amunicja
+     */
     public Text magazinesLeftUI;
 
     // 1 - pistol, 2 - assault, 3 - shotgun, 4 - molotov
-    public int selectedWeapon = 1; 
+    /*
+     * Zmienna, ktora wskazuje na wybrana bron
+     */
+    public int selectedWeapon = 1;
+
+    /*
+     * Zmienna tablicowa okreslajaca, ktore bronie sa odblokowane dla gracza
+     */
     public bool[] weaponLock = { true, false, false, true };
 
-
+    /*
+     * Zmienna tablicowa okreslajaca liczbe pozostalych magazynkow dla kazdej broni
+     */
     public int[] magazinesLeft = { 999, 0, 0, 0 };
 
+    /*
+     * Zmienna okreslajaca predkosc kuli
+     */
     public float bulletSpeed = 0.25f;
 
     private Animator anim;
-    public float timeBetweenShoting, reloadTime, timeBetweenShots;
-    public int magazineSize, bulletsPerTab;
+
+    /*
+     * Zmienna okreslajaca czas miedzy kolejnymi strzalami
+     */
+    public float timeBetweenShoting;
+
+    /*
+     * Zmienna okreslajaca czas przeladowania broni
+     */
+    public float reloadTime;
+
+    /*
+     * Zmienna okreslajaca czas miedzy kolejnymi strzalami
+     */
+    public float timeBetweenShots;
+
+    /*
+     * Zmienna okreslajaca pojemnosc magazynku
+     */
+    public int magazineSize;
+
+    /*
+     * Zmienna okreslajaca liczbe wystrzelonych kul po jednym przycisnieciu LPM
+     */
+    public int bulletsPerTab;
+
+    /*
+     * Zmienna okreslajaca, czy gracz moze przytrzymac LPM aby prowadzic ogien ciagly
+     */
     public bool allowButtonHold;
 
+    /*
+     * Zmienna tablicowa okreslajaca liczbe pozostalych kul w magazynku
+     */
     public int[] bulletsLeft = { 10, 30, 15, 0 };
-    int bulletsShot, damage;
-    bool shooting, reloading, readyToShoot;
+
+    /*
+     * Zmienna okreslajaca ile kul zostalo juz wystrzelonych po wcisnieciu LPM
+     */
+    int bulletsShot;
+
+    /*
+     * Zmienna okreslajaca liczbe obrazen, ktore zadaje dana bron
+     */
+    int damage;
+
+    /*
+     * Zmienna okreslajaca czy gracz strzela
+     */
+    bool shooting;
+
+    /*
+     * Zmienna okreslajaca czy przeladowanie jest w toku
+     */
+    bool reloading;
+
+    /*
+     * Zmienna okreslajaca czy bron jest gotowa do wystrzalu
+     */
+    bool readyToShoot;
+
+    /*
+     * Zmienna okreslajaca czy bron jest zablokowana
+     */
     public bool blockShooting = false;
 
     private bool throwingStance;
@@ -64,10 +152,7 @@ public class WeaponSystem : MonoBehaviour
 
     Player player;
 
-    //public int playerPoints = 0;
 
-
-    // Start is called before the first frame update
     void Start()
     {
         anim = transform.root.GetComponent<Animator>();
@@ -76,7 +161,7 @@ public class WeaponSystem : MonoBehaviour
         audioSource = gameObject.transform.GetChild(selectedWeapon-1).gameObject.GetComponent<AudioSource>();
     }
 
-    // Update is called once per frame
+    
     void Update()
     {
         MyInput();
@@ -84,6 +169,9 @@ public class WeaponSystem : MonoBehaviour
         pointsDisplay.text = player.points.ToString();
     }
 
+    /*
+     * Funkcja odczytujaca klawisze wcisniete przez gracza
+     */
     private void MyInput()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1) && selectedWeapon != 1) {
@@ -131,6 +219,9 @@ public class WeaponSystem : MonoBehaviour
             
     }
 
+    /*
+     * Funkcja odpowiadajaca za przeladowanie broni
+     */
     private void Reload()
     {
         reloading = true;
@@ -252,6 +343,9 @@ public class WeaponSystem : MonoBehaviour
         Destroy(Trail.gameObject, Trail.time);
     }
 
+    /*
+     * Funkcja ustawiajaca gotowosc broni do ponownego wystrzalu
+     */
     private void ResetShot()
     {
         readyToShoot = true;
@@ -262,6 +356,9 @@ public class WeaponSystem : MonoBehaviour
         readyToThrow = true;
     }
 
+    /*
+     * Funkcja informujaca o zakonczeniu procedury przeladowania broni
+     */
     private void ReloadFinished()
     {
         bulletsLeft[selectedWeapon - 1] = magazineSize;
@@ -270,6 +367,9 @@ public class WeaponSystem : MonoBehaviour
         
     }
 
+    /*
+     * Funkcja sluzaca do przelaczania broni
+     */
     void SelectWeapon(int weaponIndex)
     {
         previousWeapon = selectedWeapon;
@@ -363,6 +463,9 @@ public class WeaponSystem : MonoBehaviour
 
     }
 
+    /*
+     * Funkcja ustawiajaca kontrolki tekstowe w interfejsie uzytkownika
+     */
     void SetUpHud()
     {
 

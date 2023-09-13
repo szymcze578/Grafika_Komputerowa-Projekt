@@ -14,11 +14,17 @@ public class mainMenu : MonoBehaviour
         audioSource = gameObject.GetComponent<AudioSource>();
     }
 
+    /*
+     * Funkcja powoduje przejscie do kolejnej sceny
+     */
     public void PlayGame()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
+    /*
+     * Funkcja powoduje wyjscie z gry
+     */
     public void QuitGame()
     {
         Application.Quit();

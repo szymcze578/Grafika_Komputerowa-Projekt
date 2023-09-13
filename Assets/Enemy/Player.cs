@@ -64,6 +64,9 @@ public class Player : MonoBehaviour, IDamageable
         return transform;
     }
 
+    /*
+     * Funkcja powodujaca stopniowy zanik efektu krwi w interfejsie uzytkownika
+     */
     public IEnumerator dissapearBloodEffect()
     {
         Color currentColor = bloodEffect.color;
@@ -77,11 +80,17 @@ public class Player : MonoBehaviour, IDamageable
         yield return null;
     }
 
+    /*
+     * Funkcja powodujaca restart aktualnego poziomu
+     */
     public void playAgain()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
+    /*
+     * Funkcja powodujaca powrot do glownego menu
+     */
     public void returnToMainMenu()
     {
         SceneManager.LoadScene(0);
