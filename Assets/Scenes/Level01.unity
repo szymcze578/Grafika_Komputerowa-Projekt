@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.17276807, g: 0.21589197, b: 0.29782572, a: 1}
+  m_IndirectSpecularColor: {r: 0.172768, g: 0.21589169, b: 0.29782546, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -12899,7 +12899,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Player: {fileID: 409952839}
-  NumberOfEnemiesToSpawn: 1
+  NumberOfEnemiesToSpawn: 3
   SpawnDelay: 1
   Enemies:
   - {fileID: 11400000, guid: 5dad77873a58e084eaa69f51b5e207f7, type: 2}
@@ -12911,6 +12911,8 @@ MonoBehaviour:
   ScaledEnemies: []
   LimitLevel: 2
   RestTime: 10
+  UIShop: {fileID: 973713865}
+  oldNavMeshSurface: {fileID: 364550608}
   EnemiesLeftText: {fileID: 1477465637}
   RestTimeText: {fileID: 511597729}
   WaveAlerts: {fileID: 2104625337}
@@ -17840,6 +17842,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6865731074495872890}
     m_Modifications:
+    - target: {fileID: 5207084497968387766, guid: 3f036e691e664f447a90fa723afffeb0, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5999845506303850339, guid: 3f036e691e664f447a90fa723afffeb0, type: 3}
       propertyPath: m_Name
       value: chair (6)

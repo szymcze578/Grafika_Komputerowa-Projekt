@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class EnemySpawner : MonoBehaviour
@@ -24,7 +26,12 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField]
     private int LimitLevel = 1;
     [SerializeField]
-    private float RestTime = 30;
+    private int RestTime = 30;
+
+    [SerializeField]
+    private GameObject UIShop;
+    [SerializeField]
+    private NavMeshSurface oldNavMeshSurface;
 
     private int EnemiesAlive = 0;
     private int SpawnedEnemies = 0;
@@ -50,6 +57,7 @@ public class EnemySpawner : MonoBehaviour
 
     private void Start()
     {
+        //Debug.Log(GameObject.Find("UIShop"));
         Shop = GameObject.Find("chair (6)").GetComponent<UIShop>();
         Triangulation = NavMesh.CalculateTriangulation();
         for(int i = 0; i < Enemies.Count; i++)
@@ -61,6 +69,7 @@ public class EnemySpawner : MonoBehaviour
 
     private IEnumerator SpawnEnemies()
     {
+        StartCoroutine(WaveAlertsTextBlink("Wave has started!"));
         Shop.wave = true;
         Level++;
         SpawnedEnemies = 0;
@@ -88,7 +97,7 @@ public class EnemySpawner : MonoBehaviour
             yield return Wait;
         }
 
-        if(ContinousSpawning)
+        if (ContinousSpawning)
         {
             ScaleUpSpawns();
             StartCoroutine(SpawnEnemies());
@@ -128,6 +137,8 @@ public class EnemySpawner : MonoBehaviour
                 enemy.OnDie += HandleEnemyDeath;
 
                 EnemiesAlive++;
+
+                SetEnemiesLeftText(EnemiesAlive);
             }
             else
             {
@@ -151,7 +162,14 @@ public class EnemySpawner : MonoBehaviour
     {
         EnemiesAlive--;
 
-        if ( EnemiesAlive == 0 && SpawnedEnemies == NumberOfEnemiesToSpawn && Level != LimitLevel)
+        SetEnemiesLeftText(EnemiesAlive);
+
+        if (EnemiesAlive == 0 && SpawnedEnemies == NumberOfEnemiesToSpawn && Level == LimitLevel)
+        {
+            ChangeScene();
+        }
+
+        if (EnemiesAlive == 0 && SpawnedEnemies == NumberOfEnemiesToSpawn && Level != LimitLevel)
         {
             StartCoroutine(DoNextRound());
         }
@@ -160,7 +178,12 @@ public class EnemySpawner : MonoBehaviour
     private IEnumerator DoNextRound()
     {
         Shop.wave = false;
-        yield return new WaitForSeconds(RestTime);
+        for (int i = RestTime ; i > 0 ; i--)
+        {
+            ShowRestTime(i.ToString());
+            yield return new WaitForSeconds(1);
+        }
+        RestTimeText.text = "Rest time: --";
         ScaleUpSpawns();
         StartCoroutine(SpawnEnemies());
     }
@@ -189,20 +212,9 @@ public class EnemySpawner : MonoBehaviour
 
     // timer przerwy miedzy falami
     // wywolanie -> StartCoroutine(SetRestTimer(RestTime));
-    public IEnumerator SetRestTimer(float RestTime)
+    public void ShowRestTime(string time)
     {
-
-        for (float i = RestTime; i >= 0; i -= Time.deltaTime)
-        {
-            RestTimeText.text = "Rest time: " + Mathf.RoundToInt(i).ToString() + " s";
-            if(Mathf.RoundToInt(i) == 0)
-            {
-                RestTimeText.text = "Rest time: -- ";
-            }
-            yield return null;
-        }
-
-        yield return null;
+        RestTimeText.text = "Rest time: " + time;
     }
 
     // info o rozpoczeciu/zakonczeniu fali
@@ -219,6 +231,83 @@ public class EnemySpawner : MonoBehaviour
             i++;
         }
 
+    }
+
+    private IEnumerator GoToScene(int nextSceneIndex, List<GameObject> objectsList)
+    {
+        SceneManager.LoadScene(nextSceneIndex, LoadSceneMode.Additive);
+
+        Scene nextScene = SceneManager.GetSceneByBuildIndex(nextSceneIndex);
+
+        foreach (GameObject obj in objectsList)
+        {
+            SceneManager.MoveGameObjectToScene(obj, nextScene);
+        }
+
+        yield return null;
+
+        SceneManager.UnloadSceneAsync(nextSceneIndex - 1);
+
+        oldNavMeshSurface.enabled = false;
+        Triangulation = NavMesh.CalculateTriangulation();
+        EnemyObjectPools.Clear();
+
+        for (int i = 0; i < Enemies.Count; i++)
+        {
+            EnemyObjectPools.Add(i, ObjectPool.CreateInstance(Enemies[i].Prefab, NumberOfEnemiesToSpawn));
+        }
+
+        LimitLevel = LimitLevel * 2;
+        StartCoroutine(DoNextRound());
+    }
+
+    private void ChangeScene()
+    {
+        string currentSceneName = SceneManager.GetActiveScene().name;
+
+        switch(currentSceneName)
+        {
+            case "Level01":
+                Vector3 v = new Vector3();
+                List<GameObject> objects = new List<GameObject>()
+                {
+                    GameObject.Find("Main Camera"),
+                    GameObject.Find("Player"),
+                    GameObject.Find("Enemy Manager"),
+                    GameObject.Find("Music Manager"),
+                    GameObject.Find("Directional Light"),
+                    GameObject.Find("HUD"),
+                    GameObject.Find("chair (6)"),
+                    UIShop
+                };
+
+                v = objects[0].transform.localPosition;
+                v.x = (float)-57.3;
+                v.z = (float)-44.36501;
+                objects[0].transform.localPosition = v;
+
+                v = objects[1].transform.localPosition;
+                v.x = (float)-57.3;
+                v.z = (float)-40.8;
+                objects[1].transform.localPosition = v;
+
+                v = objects[4].transform.localPosition;
+                v.x = (float)-57.3;
+                v.z = (float)-40.78502;
+                objects[4].transform.localPosition = v;
+
+
+                objects[6].transform.parent = null;
+                DontDestroyOnLoad(objects[6]);
+
+                v = objects[6].transform.localPosition;
+                v.x = (float)-55.65;
+                v.z = (float)-46.97;
+                objects[6].transform.localPosition = v;
+
+                StartCoroutine(GoToScene(2, objects));
+                break;
+        }
     }
 
 }

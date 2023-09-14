@@ -14,6 +14,19 @@ public class Enemy : PoolableObject, IDamageable
     public delegate void DeathEvent(Enemy enemy);
     public DeathEvent OnDie;
 
+    [SerializeField]
+    private Transform RagdollRoot;
+    [SerializeField]
+    private float FadeOutDelay = 10f;
+    [SerializeField]
+    private GameObject attackRadiusObject;
+    private Rigidbody[] Rigidbodies;
+    private CharacterJoint[] Joints;
+    private CapsuleCollider capsule;
+    //private List<Vector3> positionsRigid;
+    //private List<Quaternion> rotationsRigid;
+    //private List<Vector3> positionsJoints;
+    //private List<Quaternion> rotationsJoints;
     private Coroutine LookCoroutine;
     private const string ATTACK_TRIGGER = "Attack";
 
@@ -25,9 +38,17 @@ public class Enemy : PoolableObject, IDamageable
 
     private void Awake()
     {
+        //positionsRigid = new List<Vector3>();
+        //rotationsRigid = new List<Quaternion>();
+        //positionsJoints = new List<Vector3>();
+        //rotationsJoints = new List<Quaternion>();
         AttackRadius.OnAttack += OnAttack;
         weaponSystem = GameObject.Find("GunHolder").GetComponent<WeaponSystem>();
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        Rigidbodies = RagdollRoot.GetComponentsInChildren<Rigidbody>();
+        Joints = RagdollRoot.GetComponentsInChildren<CharacterJoint>();
+        capsule = GetComponent<CapsuleCollider>();
+        //SaveDefaultRagdollPosition();
     }
 
     private void OnAttack(IDamageable Target)
@@ -71,14 +92,7 @@ public class Enemy : PoolableObject, IDamageable
 
     public override void OnDisable()
     {
-        if(Movement.FollowCoroutine != null)
-        {
-            StopCoroutine(Movement.FollowCoroutine);
-            Movement.FollowCoroutine = null;
-        }
         base.OnDisable();
-
-        Agent.enabled = false;
         OnDie = null;
     }
 
@@ -117,9 +131,113 @@ public class Enemy : PoolableObject, IDamageable
         {
             player.points += 10;
             OnDie?.Invoke(this);
-            gameObject.SetActive(false);
+            EnableRagdoll();
+            StartCoroutine(FadeOut());
         }
     }
+
+    public void EnableAnimator()
+    {
+        Animator.enabled = true;
+        Agent.enabled = true;
+        foreach (CharacterJoint joint in Joints)
+        {
+            joint.enableCollision = false;
+        }
+        foreach (Rigidbody rigidbody in Rigidbodies)
+        {
+            rigidbody.detectCollisions = false;
+            rigidbody.useGravity = false;
+            rigidbody.isKinematic = true;
+        }
+    }
+
+    public void EnableRagdoll()
+    {
+        attackRadiusObject.SetActive(false);
+        capsule.enabled = false;
+        Animator.enabled = false;
+        Agent.enabled = false;
+
+        if (Movement.FollowCoroutine != null)
+        {
+            Movement.StopCoroutine(Movement.FollowCoroutine);
+            Movement.FollowCoroutine = null;
+        }
+
+        foreach (CharacterJoint joint in Joints)
+        {
+            joint.enableCollision = true;
+        }
+        foreach (Rigidbody rigidbody in Rigidbodies)
+        {
+            rigidbody.velocity = Vector3.zero;
+            rigidbody.detectCollisions = true;
+            rigidbody.useGravity = true;
+            rigidbody.isKinematic = false;
+        }
+    }
+
+    public void DisableAllRigidbodies()
+    {
+        foreach (Rigidbody rigidbody in Rigidbodies)
+        {
+            rigidbody.detectCollisions = false;
+            rigidbody.useGravity = false;
+            rigidbody.isKinematic = true;
+        }
+    }
+
+    private IEnumerator FadeOut()
+    {
+        yield return new WaitForSeconds(FadeOutDelay);
+
+        DisableAllRigidbodies();
+
+        float time = 0;
+        while (time < 1)
+        {
+            transform.position += Vector3.down * Time.deltaTime;
+            time += Time.deltaTime;
+            yield return null;
+        }
+
+        attackRadiusObject.SetActive(true);
+        capsule.enabled = true;
+        EnableAnimator();
+        //ResetRagdollPosition();
+        gameObject.SetActive(false);
+    }
+
+    //private void ResetRagdollPosition()
+    //{
+    //    for (int i = 0; i < Rigidbodies.Length; i++)
+    //    {
+    //        Rigidbodies[i].transform.localPosition = positionsRigid[i];
+    //        Rigidbodies[i].transform.localRotation = rotationsRigid[i];
+    //    }
+
+    //    for (int i = 0; i < Joints.Length; i++)
+    //    {
+    //        Joints[i].transform.localPosition = positionsJoints[i];
+    //        Joints[i].transform.localRotation = rotationsJoints[i];
+    //    }
+    //}
+
+    //private void SaveDefaultRagdollPosition()
+    //{
+    //    foreach (Rigidbody rigidbody in Rigidbodies)
+    //    {
+    //        positionsRigid.Add(rigidbody.transform.localPosition);
+    //        rotationsRigid.Add(rigidbody.transform.localRotation);
+    //    }
+
+    //    foreach (Joint joint in Joints)
+    //    {
+    //        positionsJoints.Add(joint.transform.localPosition);
+    //        rotationsJoints.Add(joint.transform.localRotation);
+    //    }
+    //}
 
     public Transform GetTransform()
     {

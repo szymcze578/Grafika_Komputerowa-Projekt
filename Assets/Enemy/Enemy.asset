@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Enemy
   m_EditorClassIdentifier: 
   Prefab: {fileID: 431663614516757732, guid: aca4ed6a7d7cbd542abee92b9beb525a, type: 3}
-  Health: 100
+  Health: 1
   AttackDelay: 1
   Damage: 5
   AttackRadius: 1.5
