@@ -25,6 +25,9 @@ public class EnemySpawner : MonoBehaviour
     private List<EnemyScriptableObject> ScaledEnemies = new List<EnemyScriptableObject>();
     [SerializeField]
     private int LimitLevel = 1;
+    
+    [SerializeField]
+    private int LimitLevel2 = 6;
     [SerializeField]
     private int RestTime = 30;
 
@@ -44,6 +47,9 @@ public class EnemySpawner : MonoBehaviour
     public Text EnemiesLeftText;
     public Text RestTimeText;
     public Text WaveAlerts;
+
+    public Image winScreen;
+    public AudioSource musicManager;
 
     private void Awake()
     {
@@ -164,6 +170,13 @@ public class EnemySpawner : MonoBehaviour
 
         SetEnemiesLeftText(EnemiesAlive);
 
+        if (EnemiesAlive == 0 && SpawnedEnemies == NumberOfEnemiesToSpawn && Level == LimitLevel2)
+        {
+            Player.gameObject.SetActive(false);
+            winScreen.gameObject.SetActive(true);
+            musicManager.enabled = false;
+        }
+
         if (EnemiesAlive == 0 && SpawnedEnemies == NumberOfEnemiesToSpawn && Level == LimitLevel)
         {
             ChangeScene();
@@ -257,7 +270,6 @@ public class EnemySpawner : MonoBehaviour
             EnemyObjectPools.Add(i, ObjectPool.CreateInstance(Enemies[i].Prefab, NumberOfEnemiesToSpawn));
         }
 
-        LimitLevel = LimitLevel * 2;
         StartCoroutine(DoNextRound());
     }
 
@@ -301,9 +313,14 @@ public class EnemySpawner : MonoBehaviour
                 DontDestroyOnLoad(objects[6]);
 
                 v = objects[6].transform.localPosition;
-                v.x = (float)-55.65;
-                v.z = (float)-46.97;
+                v.x = (float)-64.419;
+                v.z = (float)-51.79;
                 objects[6].transform.localPosition = v;
+                var scale = objects[6].transform.localScale;
+                scale.x = 0.8f;
+                scale.y = 0.8f;
+                scale.z = 0.8f;
+                objects[6].transform.localScale = scale;
 
                 StartCoroutine(GoToScene(2, objects));
                 break;

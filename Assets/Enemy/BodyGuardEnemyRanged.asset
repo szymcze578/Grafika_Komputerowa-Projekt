@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BodyGuardEnemyRanged
   m_EditorClassIdentifier: 
   Prefab: {fileID: 2881309852874395077, guid: b2bee4a16b34b024ba7c1b70cde53b62, type: 3}
-  Health: 1
+  Health: 50
   AttackDelay: 0.25
   Damage: 3
   AttackRadius: 7

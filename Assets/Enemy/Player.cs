@@ -6,16 +6,17 @@ using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour, IDamageable
 {
-    //punkty ¿ycia gracza
+    //punkty ï¿½ycia gracza
     [SerializeField]
     private int Health = 100;
-    //punkty(pieni¹dz) które gracz zdobywa podczas rozgrzewki 
+    //punkty(pieniï¿½dz) ktï¿½re gracz zdobywa podczas rozgrzewki 
     public int points = 0;
 
     public HealthBar healthBar;
 
     public Image bloodEffect;
     public Image gameOverScreen;
+    public Image winScreen;
     public float fadeSpeed = 0.5f;
 
     public AudioSource musicManager;
@@ -24,11 +25,12 @@ public class Player : MonoBehaviour, IDamageable
     {
         bloodEffect.color = new Color(bloodEffect.color.r, bloodEffect.color.g, bloodEffect.color.b, 0);
         gameOverScreen.gameObject.SetActive(false);
+        winScreen.gameObject.SetActive(false);
         musicManager.enabled = true;
     }
 
-    // Funkcja aktualizuj¹ca punkty ¿ycia gracza po otwymaniu obra¿eñ
-    // Damage - iloœæ otrzymanych obra¿eñ
+    // Funkcja aktualizujï¿½ca punkty ï¿½ycia gracza po otwymaniu obraï¿½eï¿½
+    // Damage - iloï¿½ï¿½ otrzymanych obraï¿½eï¿½
     public void TakeDamage(int Damage)
     {
         if (Health >= 0)
@@ -49,8 +51,8 @@ public class Player : MonoBehaviour, IDamageable
         healthBar.SetHealth(Health);
     }
 
-    // Funkcja zwiêkszaj¹ca ¿ycie gracza po kontakcie z odpowienim przedmiotem znajduj¹cym siê na mapie
-    // amount - iloœæ ¿ycia do zwiêkszenia
+    // Funkcja zwiï¿½kszajï¿½ca ï¿½ycie gracza po kontakcie z odpowienim przedmiotem znajdujï¿½cym siï¿½ na mapie
+    // amount - iloï¿½ï¿½ ï¿½ycia do zwiï¿½kszenia
     public bool increaseHealth(int amount)
     {
         if(Health == 100) {
