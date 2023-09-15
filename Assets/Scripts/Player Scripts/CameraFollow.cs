@@ -2,14 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Ustawienia kamery
+/// </summary>
 public class CameraFollow : MonoBehaviour
 {
 
+    /// <summary>
+    /// Obiekt gracza na scenie
+    /// </summary>
     public Transform Player;
 
+    /// <summary>
+    /// Wysokość kamery nad graczem
+    /// </summary>
     float camOffsetZ;
     
-    // Start is called before the first frame update
     void Start()
     {
 
@@ -17,7 +25,9 @@ public class CameraFollow : MonoBehaviour
   
     }
 
-    // Update is called once per frame
+    /// <summary>
+    /// Metoda aktualizuje pozycje kamery, aby podążała za graczem
+    /// </summary>
     void Update()
     {
 

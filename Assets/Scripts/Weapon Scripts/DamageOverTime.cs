@@ -2,17 +2,49 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Skrypt zadawania obrażeń od ognia
+/// </summary>
 public class DamageOverTime : MonoBehaviour
 {
+    /// <summary>
+    /// Zmienna definiująca ilość obrażeń na sekundę
+    /// </summary>
     public int damage;
+
+    /// <summary>
+    /// Zmienna definiująca w jakim promieniu zadawane są obrażenia
+    /// </summary>
     public float radius;
+
+    /// <summary>
+    /// Zmienna definiująca czas trwania ognia
+    /// </summary>
     public float time;
+
+    /// <summary>
+    /// Komponent źródła dźwięku
+    /// </summary>
     private AudioSource asource;
+
+    /// <summary>
+    /// Efekt dźwiękowy rozpoczęcia palenia się
+    /// </summary>
     public AudioClip startClip;
+
+    /// <summary>
+    /// Zapętlony efekt dźwiękowy palenia się
+    /// </summary>
     public AudioClip loopClip;
+
+    /// <summary>
+    /// System cząsteczek ognia
+    /// </summary>
     private ParticleSystem ps;
 
-    // Start is called before the first frame update
+    /// <summary>
+    /// Metoda zapala obszar w miejscu wybuchu
+    /// </summary>
     void Start()
     {   
         ps = GetComponent<ParticleSystem>();
@@ -32,12 +64,9 @@ public class DamageOverTime : MonoBehaviour
         Invoke("StopEffect", time);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+    /// <summary>
+    /// Metoda zadaje obrażenia czasowe wszystkim przeciwnikom wewnątrz ognia
+    /// </summary>
     void Dps() {
     // QueryTriggerInteraction.Collide might be needed
     Collider[] hitColliders = Physics.OverlapSphere(gameObject.transform.position, radius);
@@ -51,6 +80,10 @@ public class DamageOverTime : MonoBehaviour
         }
     }
     }
+
+    /// <summary>
+    /// Metoda gasi ogień
+    /// </summary>
     void StopEffect() {
         asource.Stop();
         Destroy(gameObject);

@@ -3,10 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// Skrypt menu głównego
+/// </summary>
 public class mainMenu : MonoBehaviour
 {
-
+    /// <summary>
+    /// Komponent źródła dźwięku
+    /// </summary>
     private AudioSource audioSource;
+
+    /// <summary>
+    /// Efekt dźwiękowy kliknięcia w kontrolkę
+    /// </summary>
     public AudioClip ClickClip;
     
     
@@ -14,22 +23,26 @@ public class mainMenu : MonoBehaviour
         audioSource = gameObject.GetComponent<AudioSource>();
     }
 
-    /*
-     * Funkcja powoduje przejscie do kolejnej sceny
-     */
+    /// <summary>
+    /// Funkcja powoduje przejscie do kolejnej sceny
+    /// </summary>
     public void PlayGame()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
-    /*
-     * Funkcja powoduje wyjscie z gry
-     */
+    /// <summary>
+    /// Funkcja powoduje wyjscie z gry
+    /// </summary>
     public void QuitGame()
     {
         Application.Quit();
     }
 
+    /// <summary>
+    /// Funkcja odtwarza efekt dźwiękowy kliknięcia w kontrolkę
+    /// </summary>
+    /// <param name="audioSource"> Źródło dźwięku </param>
     public void PlayClickClip(AudioSource audioSource) {
         if(ClickClip != null) {
             audioSource.PlayOneShot(ClickClip);

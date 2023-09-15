@@ -5,162 +5,221 @@ using UnityEngine.UI;
 using System;
 using System.Linq;
 
+/// <summary>
+/// System broni
+/// </summary>
 public class WeaponSystem : MonoBehaviour
 {
+    /// <summary>
+    /// Obiekt na scenie reprezentujący miejsce wystrzału pocisku z broni
+    /// </summary>
     [SerializeField]
     private GameObject bulletSpawnPoint = null;
-    //public GameObject bulletPrefab;
-    [SerializeField]
-    private ParticleSystem ShootingSystem;
 
+    /// <summary>
+    /// System cząsteczek dla trafienia w ściane lub mebel
+    /// </summary>
     [SerializeField]
     private ParticleSystem ImpactParticleSystem;
 
+    /// <summary>
+    /// System cząsteczek dla trafienia we wroga
+    /// </summary>
     [SerializeField]
     private ParticleSystem FleshImpactParticleSystem;
 
+    /// <summary>
+    /// Renderer smugi pocisku
+    /// </summary>
     [SerializeField]
     private TrailRenderer BulletTrail;
 
+    /// <summary>
+    /// Maska ignorująca inne obiekty niż obiekt przeciwnika
+    /// </summary>
     [SerializeField]
     private LayerMask Mask;
 
+    /// <summary>
+    /// Tablica z konfiguratorami dźwięku dla poszczególnych broni
+    /// </summary>
     public WeaponAudioConfig[] audioConfig;
+
+    /// <summary>
+    /// Źródło dźwięku dla efektów dźwiękowych broni
+    /// </summary>
     private AudioSource audioSource;
 
-    /*
-     * Pole tekstowe wyswietlajace aktualny stan amunicji
-     */
+    /// <summary>
+    /// Pole tekstowe wyswietlajace aktualny stan amunicji
+    /// </summary>
     public Text ammoDisplay;
 
-    /*
-     * Pole tekstowe wyswietlajace aktualny stan amunicji
-     */
+    /// <summary>
+    /// Pole tekstowe wyswietlajace aktualny stan amunicji
+    /// </summary>
     public Text ammoAnimation;
 
-    /*
-     * Pole tekstowe wyswietlajace punkty gracza
-     */
+    /// <summary>
+    /// Pole tekstowe wyswietlajace punkty gracza
+    /// </summary>
     public Text pointsDisplay;
 
-    /*
-     * Pole tekstowe wyswietlajace informacje w interfejsie uzytkownika
-     */
+    /// <summary>
+    /// Pole tekstowe wyswietlajace informacje w interfejsie uzytkownika
+    /// </summary>
     public Text hudInfo;
 
-    /*
-     * Pole tekstowe wyswietlajace liczbe posiadanych magazynkow z amunicja
-     */
+    /// <summary>
+    /// Pole tekstowe wyswietlajace liczbe posiadanych magazynkow z amunicja
+    /// </summary>
     public Text magazinesLeftUI;
 
-    // 1 - pistol, 2 - assault, 3 - shotgun, 4 - molotov
-    /*
-     * Zmienna, ktora wskazuje na wybrana bron
-     */
+    /// <summary>
+    /// Zmienna, ktora wskazuje na aktualnie wybraną broń (1 - pistolet, 2 - karabin, 3 - strzelba, 4 - granat zapalający)
+    /// </summary>
     public int selectedWeapon = 1;
 
-    /*
-     * Zmienna tablicowa okreslajaca, ktore bronie sa odblokowane dla gracza
-     */
+    /// <summary>
+    /// Zmienna tablicowa okreslajaca, ktore bronie sa odblokowane dla gracza
+    /// </summary>
     public bool[] weaponLock = { true, false, false, false };
 
-    /*
-     * Zmienna tablicowa okreslajaca liczbe pozostalych magazynkow dla kazdej broni
-     */
+    /// <summary>
+    /// Zmienna tablicowa okreslajaca liczbe pozostalych magazynkow dla kazdej broni
+    /// </summary>
     public int[] magazinesLeft = { 999, 0, 0, 0 };
 
-    /*
-     * Zmienna okreslajaca predkosc kuli
-     */
+    /// <summary>
+    /// Zmienna okreslajaca predkosc pocisku
+    /// </summary>
     public float bulletSpeed = 0.25f;
 
+    /// <summary>
+    /// Kontroler animacji
+    /// </summary>
     private Animator anim;
 
-    /*
-     * Zmienna okreslajaca czas miedzy kolejnymi strzalami
-     */
+    /// <summary>
+    /// Zmienna okreslajaca czas miedzy kolejnymi strzalami
+    /// </summary>
     public float timeBetweenShoting;
 
-    /*
-     * Zmienna okreslajaca czas przeladowania broni
-     */
+    /// <summary>
+    /// Zmienna okreslajaca czas przeladowania broni
+    /// </summary>
     public float reloadTime;
 
-    /*
-     * Zmienna okreslajaca czas miedzy kolejnymi strzalami
-     */
+    /// <summary>
+    /// Zmienna okreslajaca czas miedzy kolejnymi strzalami
+    /// </summary>
     public float timeBetweenShots;
 
-    /*
-     * Zmienna okreslajaca pojemnosc magazynku
-     */
+    /// <summary>
+    /// Zmienna okreslajaca pojemnosc magazynku
+    /// </summary>
     public int magazineSize;
 
-    /*
-     * Zmienna okreslajaca liczbe wystrzelonych kul po jednym przycisnieciu LPM
-     */
+    /// <summary>
+    /// Zmienna okreslajaca liczbe wystrzelonych kul po jednym przycisnieciu LPM
+    /// </summary>
     public int bulletsPerTab;
 
-    /*
-     * Zmienna okreslajaca, czy gracz moze przytrzymac LPM aby prowadzic ogien ciagly
-     */
+    /// <summary>
+    /// Zmienna okreslajaca, czy gracz moze przytrzymac LPM aby prowadzic ogien ciagly
+    /// </summary>
     public bool allowButtonHold;
 
-    /*
-     * Zmienna tablicowa okreslajaca liczbe pozostalych kul w magazynku
-     */
+    /// <summary>
+    /// Zmienna tablicowa okreslajaca liczbe pozostalych kul w magazynku
+    /// </summary>
     public int[] bulletsLeft = { 10, 30, 15, 2 };
 
-    /*
-     * Zmienna okreslajaca ile kul zostalo juz wystrzelonych po wcisnieciu LPM
-     */
+    /// <summary>
+    /// Zmienna okreslajaca ile kul zostalo juz wystrzelonych po wcisnieciu LPM
+    /// </summary>
     int bulletsShot;
 
-    /*
-     * Zmienna okreslajaca liczbe obrazen, ktore zadaje dana bron
-     */
+    /// <summary>
+    /// Zmienna okreslajaca liczbe obrazen, ktore zadaje dana bron
+    /// </summary>
     int damage;
 
-    /*
-     * Zmienna okreslajaca czy gracz strzela
-     */
+    /// <summary>
+    /// Zmienna okreslajaca czy gracz strzela
+    /// </summary>
     bool shooting;
 
-    /*
-     * Zmienna okreslajaca czy przeladowanie jest w toku
-     */
+    /// <summary>
+    /// Zmienna okreslajaca czy przeladowanie jest w toku
+    /// </summary>
     bool reloading;
 
-    /*
-     * Zmienna okreslajaca czy bron jest gotowa do wystrzalu
-     */
+    /// <summary>
+    /// Zmienna okreslajaca czy bron jest gotowa do wystrzalu
+    /// </summary>
     bool readyToShoot;
 
-    /*
-     * Zmienna okreslajaca czy bron jest zablokowana
-     */
+    /// <summary>
+    /// Zmienna okreslajaca czy bron jest zablokowana
+    /// </summary>
     public bool blockShooting = false;
 
+    /// <summary>
+    /// Zmienna okreslajaca czy gracz trzyma granat
+    /// </summary>
     private bool throwingStance;
+
+    /// <summary>
+    /// Zmienna określająca jaka broń była używana przed wyjęciem granatu
+    /// </summary>
     private int previousWeapon;
+
+    /// <summary>
+    /// Zmienna określająca, czy gracz może już rzucić granat
+    /// </summary>
     private bool readyToThrow;
 
+    /// <summary>
+    /// Renderer celownika dla rzutu granatem
+    /// </summary>
     [SerializeField]
     private LineRenderer lineRenderer;
 
-
+    /// <summary>
+    /// Ilość punktów na renderowanym celowniku (definiuje gładkość krzywej)
+    /// </summary>
     private int LinePoints = 25;
+
+    /// <summary>
+    /// Odległość między punktami na celowniku (definiuje gładkość krzywej)
+    /// </summary>
     private float TimeBetweenPoints = 0.1f;
 
+    /// <summary>
+    /// Model granatu
+    /// </summary>
     [Header("Molotov")]
     public GameObject objectToThrow;
+
+    /// <summary>
+    /// Zmienna definiująca siłę poziomą rzutu granatem
+    /// </summary>
     private float throwForce;
+
+    /// <summary>
+    /// Zmienna definiująca siłę pionową rzutu granatem
+    /// </summary>
     public float throwUpwardForce;
 
+    /// <summary>
+    /// Skrypt gracza
+    /// </summary>
     Player player;
     
-
-
+    /// <summary>
+    /// Metoda inicjalizujący i ustawiające odpowiednie komponenty po rozpoczęciu rozgrywki
+    /// </summary>
     void Start()
     {
         anim = transform.root.GetComponent<Animator>();
@@ -169,7 +228,9 @@ public class WeaponSystem : MonoBehaviour
         audioSource = gameObject.transform.GetChild(selectedWeapon-1).gameObject.GetComponent<AudioSource>();
     }
 
-    
+    /// <summary>
+    /// Metoda pobiera na bieżąco klawisze naciskane przez gracza związane z obsługą broni (zmiana broni, strzelanie)
+    /// </summary>
     void Update()
     {
         MyInput();
@@ -186,9 +247,9 @@ public class WeaponSystem : MonoBehaviour
     
     }
 
-    /*
-     * Funkcja odczytujaca klawisze wcisniete przez gracza
-     */
+    /// <summary>
+    /// Funkcja odczytujaca klawisze wcisniete przez gracza
+    /// </summary>
     private void MyInput()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1) && selectedWeapon != 1) {
@@ -236,9 +297,9 @@ public class WeaponSystem : MonoBehaviour
             
     }
 
-    /*
-     * Funkcja odpowiadajaca za przeladowanie broni
-     */
+    /// <summary>
+    /// Funkcja odpowiadajaca za przeladowanie broni
+    /// </summary>
     private void Reload()
     {
         reloading = true;
@@ -247,6 +308,9 @@ public class WeaponSystem : MonoBehaviour
         audioConfig[selectedWeapon-1].PlayReloadingClip(audioSource);
     }
 
+    /// <summary>
+    /// Funkcja oblicza siłę rzutu
+    /// </summary>
     private void CalculateThrowForce()
     {
         Vector3 center = Vector3.zero;
@@ -256,6 +320,10 @@ public class WeaponSystem : MonoBehaviour
         throwForce = mousePos.magnitude / 55;
         //throwUpwardForce = 5;
     }
+
+    /// <summary>
+    /// Funkcja oblicza krzywą wyznaczającą trajektorie rzutu granatem
+    /// </summary>
     private void DrawProjection()
     {
         lineRenderer.enabled = true;
@@ -276,6 +344,9 @@ public class WeaponSystem : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Metoda odpowiadająca za rzut granatem
+    /// </summary>
     private void Throw()
     {
         readyToThrow = false;
@@ -289,6 +360,9 @@ public class WeaponSystem : MonoBehaviour
         audioConfig[selectedWeapon-1].PlayShootingClip(audioSource);
     }
 
+    /// <summary>
+    /// Metoda odpowiadająca za wyciągnięcie granatu i przygotowanie do rzutu
+    /// </summary>
     private void ThrowBegin()
     {
         GameObject projectile = Instantiate(objectToThrow, transform.GetChild(3).transform.position,  transform.GetChild(3).transform.rotation);
@@ -298,6 +372,10 @@ public class WeaponSystem : MonoBehaviour
 
         transform.GetChild(selectedWeapon-1).gameObject.SetActive(false);
     }
+
+    /// <summary>
+    /// Metoda powoduje wyciągnięcie broni używanej przed użyciem granatu
+    /// </summary>
     private void ThrowEnd()
     {
         Debug.Log("Throw End");
@@ -306,6 +384,9 @@ public class WeaponSystem : MonoBehaviour
         SelectWeapon(previousWeapon);
     }
 
+    /// <summary>
+    /// Funkcja odpowiadająca za strzelanie
+    /// </summary>
     private void Shoot()
     {
         readyToShoot = false;
@@ -359,6 +440,12 @@ public class WeaponSystem : MonoBehaviour
        
     }
 
+    /// <summary>
+    /// Funkcja renderująca smugę za pociskiem
+    /// </summary>
+    /// <param name="Trail"> Renderer smugi pocisku </param>
+    /// <param name="Hit"> Informacja o tym gdzie powinien trafić pocisk </param>
+    /// <returns></returns>
     private IEnumerator SpawnTrail(TrailRenderer Trail, RaycastHit Hit)
     {
         Vector3 startPosition = Trail.transform.position;
@@ -389,22 +476,25 @@ public class WeaponSystem : MonoBehaviour
         Destroy(Trail.gameObject, Trail.time);
     }
 
-    /*
-     * Funkcja ustawiajaca gotowosc broni do ponownego wystrzalu
-     */
+    /// <summary>
+    /// Funkcja ustawiajaca gotowosc broni do ponownego wystrzalu
+    /// </summary>
     private void ResetShot()
     {
         readyToShoot = true;
     }
 
+    /// <summary>
+    /// Funkcja ustawiajaca gotowosc do ponownego rzutu granatem
+    /// </summary>
     private void ResetThrow()
     {
         readyToThrow = true;
     }
 
-    /*
-     * Funkcja informujaca o zakonczeniu procedury przeladowania broni
-     */
+    /// <summary>
+    /// Funkcja informujaca o zakonczeniu procedury przeladowania broni
+    /// </summary>
     private void ReloadFinished()
     {
         bulletsLeft[selectedWeapon - 1] = magazineSize;
@@ -413,9 +503,10 @@ public class WeaponSystem : MonoBehaviour
         
     }
 
-    /*
-     * Funkcja sluzaca do przelaczania broni
-     */
+    /// <summary>
+    /// Funkcja sluzaca do przelaczania broni
+    /// </summary>
+    /// <param name="weaponIndex"> Index broni, która powinna zostać wyciągnięta </param>
     void SelectWeapon(int weaponIndex)
     {
         previousWeapon = selectedWeapon;
@@ -513,9 +604,9 @@ public class WeaponSystem : MonoBehaviour
 
     }
 
-    /*
-     * Funkcja ustawiajaca kontrolki tekstowe w interfejsie uzytkownika
-     */
+    /// <summary>
+    /// Funkcja ustawiajaca kontrolki tekstowe w interfejsie uzytkownika
+    /// </summary>
     void SetUpHud()
     {
 

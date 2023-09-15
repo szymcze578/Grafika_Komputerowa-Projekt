@@ -4,86 +4,104 @@ using System.Collections;
 using TMPro;
 using System;
 
+/// <summary>
+/// Ustawienia sklepu
+/// </summary>
 public class UIShop : MonoBehaviour
 {
-    /*
-     * Wskaznik do skryptu weaponSystem
-     */
+    /// <summary>
+    /// Wskaźnik do skryptu weaponSystem z systemem broni
+    /// </summary>
     public WeaponSystem weaponSystem;
 
-    /*
-     * Obiekt na mapie stanowiacy sklep
-     */
+    /// <summary>
+    /// Obiekt sklepu na mapie
+    /// </summary>
     public GameObject shop;
 
-    /*
-     * Pole tekstowe z komunikatami sklepu 
-     */
+    /// <summary>
+    /// Pole tekstowe z komunikatami sklepu
+    /// </summary>
     public Text shopAlerts;
 
-    /*
-     * Pole tekstowe z komunikatami interfejsu uzytkownika
-     */
+    /// <summary>
+    /// Pole tekstowe z komunikatami interfejsu uzytkownika
+    /// </summary>
     public Text hudAlerts;
 
-    /*
-     * Wskaznik do obiektu gracza na scenie
-     */
+    /// <summary>
+    /// Obiekt gracza na scenie
+    /// </summary>
     public GameObject player;
 
-    /*
-     * Okno sklepu w interfejsie uzytkownika
-     */
+    /// <summary>
+    /// Okno sklepu w interfejsie użytkownika
+    /// </summary>
     public GameObject canvas;
 
-    /*
-     * Przycisk do zakupu karabinu
-     */
+    /// <summary>
+    /// Przycisk do zakupu karabinu
+    /// </summary>
     public GameObject assaultButton;
 
-    /*
-     * Przycisk do zakupu strzelby
-     */
+    /// <summary>
+    /// Przycisk do zakupu strzelby
+    /// </summary>
     public GameObject shotgunButton;
 
-    /*
-     * Przycisk do zakupu amunicji do strzelby
-     */
+    /// <summary>
+    /// Przycisk do zakupu amunicji do strzelby
+    /// </summary>
     public GameObject shotgunAmmoButton;
 
-    /*
-     * Przycisk do zakupu amunicji do karabinu
-     */
+    /// <summary>
+    /// Przycisk do zakupu amunicji do karabinu
+    /// </summary>
     public GameObject assaultAmmoButton;
 
-    /*
-     * Przycisk do zakupu amunicji granatu zapalajacego
-     */
+    /// <summary>
+    /// Przycisk do zakupu amunicji granatu zapalajacego
+    /// </summary>
     public GameObject molotovButton;
 
-    /*
-     * Zmienna informujaca czy fala przeciwnikow jest aktywna
-     */
+    /// <summary>
+    /// Zmienna informujaca czy fala przeciwnikow jest aktywna
+    /// </summary>
     public bool wave = false;
 
-    /*
-     * Zmienna informujaca czy okno sklepu jest aktywne
-     */
+    /// <summary>
+    /// Zmienna informujaca czy okno sklepu jest aktywne
+    /// </summary>
     bool shopActive;
 
-    /*
-     * Wskaznik do skryptu gracza
-     */
+    /// <summary>
+    /// Wskaznik do skryptu gracza
+    /// </summary>
     public Player gracz;
 
+    /// <summary>
+    /// Komponent źródła dźwięku
+    /// </summary>
     private AudioSource audioSource;
+
+    /// <summary>
+    /// Efekt dźwiękowy zakupu broni
+    /// </summary>
     public AudioClip BuyWeaponClip;
+
+    /// <summary>
+    /// Efekt dźwiękowy zakupu amunicji
+    /// </summary>
     public AudioClip BuyAmmoClip;
+
+    /// <summary>
+    /// Efekt dźwiękowy otwarcia sklepu
+    /// </summary>
     public AudioClip OpenShopClip;
 
-    /*
-     * Funkcja inicjalizujaca sklep - ustawia odpowiednie zmienne, oraz dezaktywuje okno sklepu w interfejsie uzytkownika
-     */
+    /// <summary>
+    /// Funkcja inicjalizujaca sklep - ustawia odpowiednie zmienne, oraz dezaktywuje okno sklepu w interfejsie uzytkownika
+    /// </summary>
     void Start()
 	{
 		canvas.SetActive(false);
@@ -103,9 +121,9 @@ public class UIShop : MonoBehaviour
         audioSource = gameObject.GetComponent<AudioSource>();
     }
 
-    /*
-     * Funkcja, ktora sprawdza odleglosc gracza od sklepu i aktywuje interakcje
-     */
+    /// <summary>
+    /// Funkcja, ktora sprawdza odleglosc gracza od sklepu i aktywuje interakcje
+    /// </summary>
     void Update()
     {
 		float distance = Vector3.Distance(player.transform.position, shop.transform.position);
@@ -143,9 +161,9 @@ public class UIShop : MonoBehaviour
 
     }
 
-    /*
-     * Funkcja sluzaca do zakupu karabinu w sklepie
-     */
+    /// <summary>
+    /// Funkcja sluzaca do zakupu karabinu w sklepie
+    /// </summary>
     void buyAssault()
 	{
 		if(!weaponSystem.weaponLock[1] && gracz.points >= 30)
@@ -173,9 +191,9 @@ public class UIShop : MonoBehaviour
 
 	}
 
-    /*
-     * Funkcja sluzaca do zakupu strzelby w sklepie
-     */
+    /// <summary>
+    /// Funkcja sluzaca do zakupu strzelby w sklepie
+    /// </summary>
     void buyShotgun()
 	{
 		if (!weaponSystem.weaponLock[2] && gracz.points >= 15)
@@ -203,9 +221,9 @@ public class UIShop : MonoBehaviour
 
 	}
 
-    /*
-     * Funkcja sluzaca do zakupu amunicji do strzelby w sklepie
-     */
+    /// <summary>
+    /// Funkcja sluzaca do zakupu amunicji do strzelby w sklepie
+    /// </summary>
     void buyShotgunAmmo()
     {
         if (weaponSystem.weaponLock[2] && gracz.points >= 15)
@@ -230,9 +248,9 @@ public class UIShop : MonoBehaviour
         Invoke("ResetShopAlerts", 2.0f);
     }
 
-    /*
-     * Funkcja sluzaca do zakupu amunicji do karabinu w sklepie
-     */
+    /// <summary>
+    /// Funkcja sluzaca do zakupu amunicji do karabinu w sklepie
+    /// </summary>
     void buyAssaultAmmo()
     {
         if (weaponSystem.weaponLock[1] && gracz.points >= 25)
@@ -257,9 +275,9 @@ public class UIShop : MonoBehaviour
         Invoke("ResetShopAlerts", 2.0f);
     }
 
-    /*
-     * Funkcja sluzaca do zakupu granata zapalajacego w sklepie
-     */
+    /// <summary>
+    /// Funkcja sluzaca do zakupu granata zapalajacego w sklepie
+    /// </summary>
     void buyMolotov()
     {
         if (gracz.points >= 50)
@@ -279,26 +297,38 @@ public class UIShop : MonoBehaviour
         Invoke("ResetShopAlerts", 2.0f);
     }
 
-    /*
-     * Funkcja resetujaca pole tekstowe z komunikatami
-     */
+    /// <summary>
+    /// Funkcja resetujaca pole tekstowe z komunikatami
+    /// </summary>
     void ResetShopAlerts()
     {
         shopAlerts.text = "";
     }
 
+    /// <summary>
+    /// Funkcja odtwarzająca efekt dźwiękowy zakupu broni
+    /// </summary>
+    /// <param name="audioSource"> Źródło dźwięku </param>
     public void PlayBuyWeaponClip(AudioSource audioSource) {
         if(BuyWeaponClip != null) {
             audioSource.PlayOneShot(BuyWeaponClip);
         }
     }
 
+    /// <summary>
+    /// Funkcja odtwarzająca efekt dźwiękowy zakupu amunicji
+    /// </summary>
+    /// <param name="audioSource"> Źródło dźwięku </param>
     public void PlayBuyAmmoClip(AudioSource audioSource) {
         if(BuyAmmoClip != null) {
             audioSource.PlayOneShot(BuyAmmoClip, 0.5f);
         }
     }
 
+    /// <summary>
+    /// Funkcja odtwarzająca efekt dźwiękowy otwarcia sklepu
+    /// </summary>
+    /// <param name="audioSource"> Źródło dźwięku </param>
     public void PlayOpenShopClip(AudioSource audioSource) {
         if(OpenShopClip != null) {
             audioSource.PlayOneShot(OpenShopClip);
